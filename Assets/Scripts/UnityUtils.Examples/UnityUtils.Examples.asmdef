@@ -1,0 +1,16 @@
+{
+    "name": "UnityUtils.Examples",
+    "rootNamespace": "UnityUtils.Examples",
+    "references": [
+        "UnityUtils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
