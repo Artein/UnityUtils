@@ -10,7 +10,7 @@ namespace Enumeration
         [Test] public void FixedIndexer()
         {
             var results = new List<int>();
-            foreach (var i in 2)
+            foreach (var i in 2) // [0; 2]
             {
                 results.Add(i);
             }
@@ -62,6 +62,17 @@ namespace Enumeration
             }
             
             Assert.AreEqual(results, new List<int>{ 2, 1, 0 });
+        }
+        
+        [Test] public void SingleRange()
+        {
+            var results = new List<int>();
+            foreach (int i in 2..2)
+            {
+                results.Add(i);
+            }
+            
+            Assert.AreEqual(results, new List<int>{ 2 });
         }
     }
 }
