@@ -46,7 +46,7 @@ namespace UnityUtils.Examples
                 throw;
             }
             
-            // 6. Fixed counter. Prints from [0; 9]
+            // 6. Fixed counter. Prints from [0; 10]
             foreach (var i in 10)
             {
                 UnityEngine.Debug.Log(i);

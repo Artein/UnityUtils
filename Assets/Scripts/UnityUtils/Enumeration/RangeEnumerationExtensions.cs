@@ -5,28 +5,30 @@ namespace UnityUtils.Enumeration
     // Makes possible to enumerate with ranges. No heap allocations. Check EnumerationExamples for examples
     public static class RangeEnumerationExtensions
     {
-        public static CustomIntEnumerator GetEnumerator(this Range range)
+        public static IntEnumerator GetEnumerator(this Range range)
         {
-            return new CustomIntEnumerator(range);
+            if (range.End.IsFromEnd)
+            {
+                throw new NotSupportedException("Range must be closed");
+            }
+            
+            return new IntEnumerator(range);
         }
 
-        public static CustomIntEnumerator GetEnumerator(this int count)
+        public static IntEnumerator GetEnumerator(this int count)
         {
-            return new CustomIntEnumerator(new Range(0, count - 1));
+            return new IntEnumerator(new Range(0, count));
         }
 
-        public ref struct CustomIntEnumerator
+        public ref struct IntEnumerator
         {
             private readonly int _end;
+            private readonly int _step;
             
-            public CustomIntEnumerator(Range range)
+            public IntEnumerator(Range range)
             {
-                if (range.End.IsFromEnd)
-                {
-                    throw new NotSupportedException("Range must be closed");
-                }
-                
-                Current = range.Start.Value - 1;
+                _step = range.Start.Value <= range.End.Value ? 1 : -1;
+                Current = range.Start.Value - _step;
                 _end = range.End.Value;
             }
 
@@ -34,8 +36,8 @@ namespace UnityUtils.Enumeration
 
             public bool MoveNext()
             {
-                Current++;
-                return Current <= _end;
+                Current += _step;
+                return Current * _step <= _end * _step;
             }
         }
     }
