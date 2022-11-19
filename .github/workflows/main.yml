@@ -19,7 +19,6 @@ jobs:
           lfs: true
           clean: true
           submodules: true
-          token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
       - name: Cache dependencies and build outputs to improve workflow execution time.
         uses: actions/cache@v3
         with:
