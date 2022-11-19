@@ -5,6 +5,10 @@ on:
   pull_request: {}
   push: { branches: [ main ] }
   
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+  
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
   
