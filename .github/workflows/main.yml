@@ -15,8 +15,6 @@ jobs:
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
     strategy:
       fail-fast: false
-      matrix:
-        projectPath: [test-project]
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
