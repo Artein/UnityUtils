@@ -70,7 +70,7 @@ jobs:
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
       - name: Upload TestCoverage results # Step 8
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Coverage results
