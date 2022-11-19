@@ -8,17 +8,8 @@ on:
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
   
-jobs:
-  checkUnityLicense: # Job 1
-    name: Check for the Unity license
-    runs-on: ubuntu-latest
-    steps:
-      - name: Failed - No license # Step 1
-        if: ${{ !startsWith(env.UNITY_LICENSE, '<') }}
-        run: exit 1
-  
+jobs:  
   testAllModes: # Job 2
-    needs: checkUnityLicense
     name: ${{ matrix.testMode }}
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
@@ -26,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         projectPath: [test-project]
-        testMode: [playmode, editmode]
+        testMode: [editmode] # This repository has no playmode tests
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
@@ -35,7 +26,7 @@ jobs:
           clean: true
           submodules: true
           
-      - name: Pick up workflow dependencies cache # Step 2
+      - name: Pick up dependencies cache # Step 2
         if: success()
         uses: actions/cache@v3
         with:
@@ -57,7 +48,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Tests results for ${{ matrix.testMode }}
+          name: Test results for ${{ matrix.testMode }}
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
       - name: Upload TestCoverage results # Step 5
