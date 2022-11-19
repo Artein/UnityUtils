@@ -81,6 +81,7 @@ jobs:
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
           
       - name: Deploy CodeCoverage badge to Gist # Step 9
+        if: github.ref == 'refs/heads/main' && success()
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
