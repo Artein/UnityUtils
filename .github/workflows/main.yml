@@ -20,6 +20,7 @@ jobs:
         run: exit 1
   
   testAllModes: # Job 2
+    needs: checkUnityLicense
     name: ${{ matrix.testMode }}
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
@@ -36,7 +37,7 @@ jobs:
           clean: true
           submodules: true
           
-      - name: Cache workflow dependencies # Step 2
+      - name: Pick up workflow dependencies cache # Step 2
         if: success()
         uses: actions/cache@v3
         with:
