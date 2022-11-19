@@ -1,0 +1,92 @@
+name: Run project Tests
+run-name: Run project Tests
+
+on:
+  pull_request: {}
+  push: { branches: [ main ] }
+  
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+  
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  
+jobs:  
+  testAllModes: # Job 2
+    name: Run tests in all modes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout repository # Step 1
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          clean: true
+          submodules: true
+
+      - name: Create LFS files list # Step 2
+        if: success()
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache # Step 3
+        if: success()
+        id: lfs-cache
+        uses: actions/cache@v3.0.11
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS Pull # Step 4
+        if: success()
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+          
+      - name: Restore Library cache # Step 5
+        if: success()
+        uses: actions/cache@v3.0.11
+        with:
+          path: Library
+          key: Library-run-tests
+          restore-keys: |
+            Library-run-tests
+            Library-
+          
+      - name: Run Unity TestFramework # Step 6
+        if: success()
+        id: unity-test-runner
+        uses: game-ci/unity-test-runner@v2.1.0
+        with:
+          testMode: all
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Test Results
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
+          
+      - name: Upload TestFramework results # Step 7
+        if: always()
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: Test results
+          path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
+          
+      - name: Upload CodeCoverage results # Step 8
+        if: always()
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: Coverage results
+          path: ${{ steps.unity-test-runner.outputs.coveragePath }}
+          
+      - name: Deploy CodeCoverage badge to Gist # Step 9
+        if: github.ref == 'refs/heads/main' && success()
+        uses: exuanbo/actions-deploy-gist@v1.1.4
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: dc0873043aeff5654ce66349d38fe89d
+          gist_file_name: UnityUtils-main-coverage.svg
+          gist_description: CodeCoverage badge for the main branch of UnityUtils repository
+          file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
+          file_type: text
