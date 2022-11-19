@@ -47,9 +47,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${GITHUB_REF##*/}
+          key: Library-run-tests
           restore-keys: |
-            Library-${GITHUB_REF##*/}
+            Library-run-tests
             Library-
           
       - name: Run Unity TestFramework # Step 6
