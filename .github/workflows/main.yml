@@ -11,11 +11,13 @@ concurrency:
   
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-  
-cache_action_declaration: &cache_action actions/cache@v3.0.11
+ 
+# GitHub currently does not support YAML anchors
+# The idea is to get rid off duplicate action usage. Using anchors setup actions with versions once and then just use across workflow 
+#cache_action_declaration: &cache_action actions/cache@v3.0.11
   
 jobs:  
-  testAllModes: # Job 2
+  testAllModes: # Job 1
     name: Run tests in all modes
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
@@ -36,7 +38,7 @@ jobs:
       - name: Restore LFS cache # Step 3
         if: success()
         id: lfs-cache
-        uses: *cache_action
+        uses: actions/cache@v3.0.11
         with:
           path: .git/lfs
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
@@ -50,7 +52,7 @@ jobs:
           
       - name: Restore Library cache # Step 5
         if: success()
-        uses: *cache_action
+        uses: actions/cache@v3.0.11
         with:
           path: Library
           key: Library-run-tests
