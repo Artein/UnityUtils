@@ -64,7 +64,7 @@ jobs:
           testMode: all
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Test Results
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport'
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
           
       - name: Upload TestFramework results # Step 7
         if: always()
