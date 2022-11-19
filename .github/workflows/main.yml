@@ -73,9 +73,17 @@ jobs:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
-      - name: Upload TestCoverage results # Step 8
+      - name: Upload CodeCoverage results # Step 8
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Coverage results
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
+          
+      - name: Deploy CodeCoverage badge to Gist # Step 9
+        uses: exuanbo/actions-deploy-gist@v1.1.4
+        with:
+          token: ${{ secrets.TOKEN }}
+          gist_id: dc0873043aeff5654ce66349d38fe89d
+          file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
+          file_type: text
