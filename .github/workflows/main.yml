@@ -85,5 +85,7 @@ jobs:
         with:
           token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
+          gist_file_name: UnityUtils-main-coverage.svg
+          gist_description: CodeCoverage badge for the main branch of UnityUtils repository
           file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
           file_type: text
