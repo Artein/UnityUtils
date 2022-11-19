@@ -12,6 +12,8 @@ concurrency:
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
   
+cache_action_declaration: &cache_action actions/cache@v3.0.11
+  
 jobs:  
   testAllModes: # Job 2
     name: Run tests in all modes
@@ -34,7 +36,7 @@ jobs:
       - name: Restore LFS cache # Step 3
         if: success()
         id: lfs-cache
-        uses: actions/cache@v3.0.11
+        uses: *cache_action
         with:
           path: .git/lfs
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
@@ -48,7 +50,7 @@ jobs:
           
       - name: Restore Library cache # Step 5
         if: success()
-        uses: actions/cache@v3.0.11
+        uses: *cache_action
         with:
           path: Library
           key: Library-run-tests
