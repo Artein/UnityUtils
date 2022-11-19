@@ -3,12 +3,10 @@ on:
   pull_request: {}
   push: { branches: [ main ] }
 jobs:  
-  # Job testAllModes
-  testAllModes:
+  testAllModes: # Job 1
     name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
-    # By default timeout is 360 minutes, but this repository is small
-    timeout-minutes: 5
+    timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
     strategy:
       fail-fast: false
       matrix:
