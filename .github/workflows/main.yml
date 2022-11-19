@@ -10,14 +10,13 @@ env:
   
 jobs:  
   testAllModes: # Job 2
-    name: ${{ matrix.testMode }}
+    name: All modes
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
     strategy:
       fail-fast: false
       matrix:
         projectPath: [test-project]
-        testMode: [editmode] # This repository has no playmode tests
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
@@ -38,22 +37,22 @@ jobs:
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2
         with:
-          testMode: ${{ matrix.testMode }}
-          artifactsPath: ${{ matrix.testMode }}-artifacts
+          testMode: all
+          artifactsPath: artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          checkName: ${{ matrix.testMode }} Test Results
+          checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
           
       - name: Upload TestFramework results # Step 4
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Test results for ${{ matrix.testMode }}
+          name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
       - name: Upload TestCoverage results # Step 5
         if: success()
         uses: actions/upload-artifact@v2
         with:
-          name: Coverage results for ${{ matrix.testMode }}
+          name: Coverage results
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
