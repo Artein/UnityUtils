@@ -10,7 +10,7 @@ env:
   
 jobs:  
   testAllModes: # Job 2
-    name: All modes
+    name: Run tests in all modes
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
     strategy:
