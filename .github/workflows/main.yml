@@ -1,8 +1,10 @@
 name: Run project Tests
 run-name: Run project Tests
+
 on:
   pull_request: {}
   push: { branches: [ main ] }
+  
 jobs:  
   testAllModes: # Job 1
     name: ${{ matrix.testMode }}
@@ -20,12 +22,14 @@ jobs:
           lfs: true
           clean: true
           submodules: true
+          
       - name: Cache workflow dependencies # Step 2
         if: success()
         uses: actions/cache@v3
         with:
           path: Library
           key: Library-
+          
       - name: Run Unity TestFramework # Step 3
         if: success()
         id: unity-test-runner
@@ -40,12 +44,14 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
+          
       - name: Upload TestFramework results # Step 4
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Tests results for ${{ matrix.testMode }}
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
+          
       - name: Upload TestCoverage results # Step 5
         if: success()
         uses: actions/upload-artifact@v2
