@@ -14,13 +14,13 @@ jobs:
         projectPath: [test-project]
         testMode: [playmode, editmode]
     steps:
-      - name: Checkout project repository # Step 1
+      - name: Checkout repository # Step 1
         uses: actions/checkout@v3
         with:
           lfs: true
           clean: true
           submodules: true
-      - name: Cache dependencies and build outputs to improve workflow execution time # Step 2
+      - name: Cache workflow dependencies # Step 2
         if: success()
         uses: actions/cache@v3
         with:
@@ -28,20 +28,21 @@ jobs:
           key: Library-${{ matrix.projectPath }}
           restore-keys: |
             Library-
-      - name: Run Unity tests # Step 3
+      - name: Run Unity TestFramework # Step 3
         if: success()
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2
         env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          #projectPath: ${{ matrix.projectPath }}
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-      - name: Upload Test results # Step 4
+      - name: Upload TestFramework results # Step 4
         if: always()
         uses: actions/upload-artifact@v2
         with:
