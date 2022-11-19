@@ -83,7 +83,7 @@ jobs:
       - name: Deploy CodeCoverage badge to Gist # Step 9
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
           file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
           file_type: text
