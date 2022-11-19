@@ -30,7 +30,7 @@ jobs:
       - name: Restore LFS cache # Step 3
         if: success()
         id: lfs-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .git/lfs
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
@@ -58,7 +58,6 @@ jobs:
         uses: game-ci/unity-test-runner@v2
         with:
           testMode: all
-          artifactsPath: artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
