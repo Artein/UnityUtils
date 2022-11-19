@@ -4,7 +4,7 @@ on:
   push: { branches: [ main ] }
 jobs:  
   testAllModes: # Job 1
-    name: Test in ${{ matrix.testMode }}
+    name: ${{ matrix.testMode }}
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
     strategy:
