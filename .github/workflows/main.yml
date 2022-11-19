@@ -1,5 +1,5 @@
 name: Run project Tests
-run-name: Run project Tests by ${{ github.actor }} 
+run-name: Run project Tests
 on:
   pull_request: {}
   push: { branches: [ main ] }
@@ -35,14 +35,14 @@ jobs:
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          projectPath: ${{ matrix.projectPath }}
+          #projectPath: ${{ matrix.projectPath }}
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: ${{ matrix.testMode }} Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-      - name: Upload TestCoverage results # Step 4
-        if: success()
+      - name: Upload Test results # Step 4
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Tests results for ${{ matrix.testMode }}
