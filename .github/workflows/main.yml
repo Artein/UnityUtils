@@ -73,6 +73,7 @@ jobs:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
+        # TODO: Zip results for better uploading
       - name: Upload CodeCoverage results # Step 8
         if: always()
         uses: actions/upload-artifact@v3.1.1
