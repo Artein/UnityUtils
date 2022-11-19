@@ -3,7 +3,7 @@ using UnityUtils.Enumeration;
 
 namespace UnityUtils.Examples
 {
-    public class EnumerationExamples
+    internal class EnumerationExamples
     {
         public EnumerationExamples()
         {
