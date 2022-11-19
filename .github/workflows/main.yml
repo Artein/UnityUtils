@@ -5,8 +5,21 @@ on:
   pull_request: {}
   push: { branches: [ main ] }
   
-jobs:  
-  testAllModes: # Job 1
+env:
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  
+jobs:
+  checkUnityLicense: # Job 1
+    name: Check for the Unity license
+    runs-on: ubuntu-latest
+    steps:
+      - name: Failed - No license # Step 1
+        if: ${{ !startsWith(env.UNITY_LICENSE, '<') }}
+        run: exit 1
+  
+  testAllModes: # Job 2
     name: ${{ matrix.testMode }}
     runs-on: ubuntu-latest
     timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
@@ -34,10 +47,10 @@ jobs:
         if: success()
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        #env:
+        #  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+        #  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        #  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
