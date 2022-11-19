@@ -34,7 +34,7 @@ jobs:
       - name: Restore LFS cache # Step 3
         if: success()
         id: lfs-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v3.0.11
         with:
           path: .git/lfs
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
@@ -48,7 +48,7 @@ jobs:
           
       - name: Restore Library cache # Step 5
         if: success()
-        uses: actions/cache@v3
+        uses: actions/cache@v3.0.11
         with:
           path: Library
           key: Library-run-tests
@@ -59,7 +59,7 @@ jobs:
       - name: Run Unity TestFramework # Step 6
         if: success()
         id: unity-test-runner
-        uses: game-ci/unity-test-runner@v2
+        uses: game-ci/unity-test-runner@v2.1.0
         with:
           testMode: all
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -68,14 +68,14 @@ jobs:
           
       - name: Upload TestFramework results # Step 7
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
       - name: Upload TestCoverage results # Step 8
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.1
         with:
           name: Coverage results
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
