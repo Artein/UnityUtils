@@ -39,7 +39,7 @@ namespace UnityUtils.Invocation
                 
             public int Compare(KeyValuePair<int, Action> left, KeyValuePair<int, Action> right)
             {
-                return left.Key.CompareTo(right.Value);
+                return left.Key.CompareTo(right.Key);
             }
         }
     }
