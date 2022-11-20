@@ -74,9 +74,12 @@ jobs:
         if: success()
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
         
-        # TEST
-      - if: success()
-        run: ls -R
+      - name: Commit CodeCoverage results # Step X
+        if: success()
+#        if: success() && github.ref == 'refs/heads/main'
+        uses: EndBug/add-and-commit@v9.1.1
+        with:
+          add: CodeCoverage/\\*
           
       - name: Upload TestFramework results # Step 8
         if: always()
@@ -107,14 +110,8 @@ jobs:
       - name: Unzip CodeCoverage results # Step 2
         if: success()
         run: unzip CodeCoverage.zip
-
-#      - name: Commit CodeCoverage results # Step 3
-#        if: success()
-#        uses: EndBug/add-and-commit@v9.1.1
-#        with:
-#          add: CodeCoverage/\\*
         
-      - name: Deploy CodeCoverage SVG badge to Gist # Step 4
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 3
         if: success()
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
@@ -124,5 +121,3 @@ jobs:
           gist_description: CodeCoverage badge for the main branch of ${{ github.repository }} repository
           file_path: CodeCoverage/Report/badge_combined.svg
           file_type: text
-          
-  # TODO: Add separate step with committing CodeCoverage results while pushing to Main branch
