@@ -100,3 +100,5 @@ jobs:
           gist_description: CodeCoverage badge for the main branch of UnityUtils repository
           file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
           file_type: text
+          
+  # TODO: Add separate job with committing CodeCoverage results while pushing to Main branch
