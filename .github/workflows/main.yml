@@ -30,6 +30,7 @@ jobs:
           lfs: true
           clean: true
           submodules: true
+          ref: ${{ github.ref_name }}
 
       - name: Create LFS files list # Step 2
         if: success()
