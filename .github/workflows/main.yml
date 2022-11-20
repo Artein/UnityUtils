@@ -2,8 +2,12 @@ name: Main
 run-name: Main
 
 on:
-  pull_request: { branches: [ main ] }
-  push: { branches: [ main ] }
+  pull_request:
+    branches: [ main ]
+    paths-ignore: [ 'CodeCoverage' ]
+  push: 
+    branches: [ main ]
+    paths-ignore: [ 'CodeCoverage' ]
   workflow_dispatch:
 
 concurrency:
