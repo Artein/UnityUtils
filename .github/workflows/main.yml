@@ -117,7 +117,7 @@ jobs:
           gist_id: dc0873043aeff5654ce66349d38fe89d
           gist_file_name: UnityUtils-main-coverage.svg
           gist_description: CodeCoverage badge for the main branch of UnityUtils repository
-          file_path: Report/badge_combined.svg
+          file_path: CodeCoverage/Report/badge_combined.svg
           file_type: text
           
   # TODO: Add separate step with committing CodeCoverage results while pushing to Main branch
