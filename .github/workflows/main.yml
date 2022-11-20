@@ -99,8 +99,13 @@ jobs:
         uses: actions/download-artifact@v3.0.1
         with:
           name: CodeCoverage results
+          
+      - name: UnZip CodeCoverage results # Step 2
+        if: success()
+        run: unzip CodeCoverageResults.zip
         
-      - name: Deploy CodeCoverage SVG badge to Gist # Step 2
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 3
+        if: success()
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
