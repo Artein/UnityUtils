@@ -23,8 +23,6 @@ jobs:
     timeout-minutes: 5
     strategy:
       fail-fast: false
-    outputs:
-      codeCoveragePath: ${{ steps.unity-test-runner.outputs.coveragePath }}
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
@@ -84,23 +82,29 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: Coverage results
+          name: CodeCoverage results
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
           
-  deployCodeCoverageBadgeToGist: # Job 2
+  deployCodeCoverageResults: # Job 2
     # if: github.ref == 'refs/heads/main'
     needs: runAllTests
-    name: Deploy CodeCoverage badge to Gist
+    name: Deploy CodeCoverage results
     runs-on: ubuntu-latest
     timeout-minutes: 1
-    steps:          
-      - uses: exuanbo/actions-deploy-gist@v1.1.4
+    steps:
+      - name: Download CodeCoverage results # Step 1
+        uses: actions/download-artifact@v3.0.1
+        with:
+          name: CodeCoverage results
+        
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 2
+        uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
           gist_file_name: UnityUtils-main-coverage.svg
           gist_description: CodeCoverage badge for the main branch of UnityUtils repository
-          file_path: ${{ needs.runAllTests.outputs.codeCoveragePath }}/Report/badge_combined.svg
+          file_path: Report/badge_combined.svg
           file_type: text
           
-  # TODO: Add separate job with committing CodeCoverage results while pushing to Main branch
+  # TODO: Add separate step with committing CodeCoverage results while pushing to Main branch
