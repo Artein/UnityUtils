@@ -4,18 +4,18 @@ run-name: Main
 on:
   pull_request: {}
   push: { branches: [ main ] }
-  
+
 concurrency:
-  group: ${GITHUB_REF##*/}
+  group: ${{ github.ref_name }}
   cancel-in-progress: true
-  
+
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
  
 # GitHub currently does not support YAML anchors
 # The idea is to get rid off duplicate action usage. Using anchors setup actions with versions once and then just use across workflow 
 #cache_action_declaration: &cache_action actions/cache@v3.0.11
-  
+
 jobs:  
   runAllTests: # Job 1
     name: Run all tests
@@ -60,7 +60,7 @@ jobs:
             Library-run-tests
             Library-
           
-      - name: Run Unity TestFramework # Step 6
+      - name: Run TestFramework # Step 6
         if: success()
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2.1.0
@@ -70,35 +70,49 @@ jobs:
           checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
           
-      - name: Upload TestFramework results # Step 7
+      - name: Zip CodeCoverage results # Step 7
+        if: success()
+        run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
+          
+      - name: Upload TestFramework results # Step 8
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
-        # TODO: Zip results for better uploading
-      - name: Upload CodeCoverage results # Step 8
+      - name: Upload CodeCoverage results # Step 9
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: Coverage results
-          path: ${{ steps.unity-test-runner.outputs.coveragePath }}
-          
-  deployCodeCoverageBadgeToGist: # Job 2
+          name: CodeCoverage results
+          path: CodeCoverage.zip
+
+  deployCodeCoverageResults: # Job 2
     if: github.ref == 'refs/heads/main'
     needs: runAllTests
-    name: Deploy CodeCoverage badge to Gist
+    name: Deploy CodeCoverage results
     runs-on: ubuntu-latest
     timeout-minutes: 1
-    steps:          
-      - uses: exuanbo/actions-deploy-gist@v1.1.4
+    steps:
+      - name: Download CodeCoverage results # Step 1
+        uses: actions/download-artifact@v3.0.1
+        with:
+          name: CodeCoverage results
+          
+      - name: Unzip CodeCoverage results # Step 2
+        if: success()
+        run: unzip CodeCoverage.zip
+        
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 3
+        if: success()
+        uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
           gist_file_name: UnityUtils-main-coverage.svg
-          gist_description: CodeCoverage badge for the main branch of UnityUtils repository
-          file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
+          gist_description: CodeCoverage badge for the main branch of ${{ github.repository }} repository
+          file_path: CodeCoverage/Report/badge_combined.svg
           file_type: text
           
-  # TODO: Add separate job with committing CodeCoverage results while pushing to Main branch
+  # TODO: Add separate step with committing CodeCoverage results while pushing to Main branch
