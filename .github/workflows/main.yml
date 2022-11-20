@@ -4,10 +4,10 @@ run-name: Main
 on:
   pull_request:
     branches: [ main ]
-    paths-ignore: [ 'CodeCoverage' ]
+    paths-ignore: [ 'CodeCoverage/**' ]
   push: 
     branches: [ main ]
-    paths-ignore: [ 'CodeCoverage' ]
+    paths-ignore: [ 'CodeCoverage/**' ]
   workflow_dispatch:
 
 concurrency:
@@ -28,11 +28,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       fail-fast: false
-    steps:
-      # TEMP
-      - name: Echo Actor
-        run: echo '${{ github.actor }}'
-        
+    steps:        
       - name: Checkout repository # Step 1/a
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/checkout@v3
@@ -93,11 +89,11 @@ jobs:
         if: success()
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
 
-      - name: Check for modified files # Step
+      - name: Check for modified files # Step 8
         id: git-check
         run: echo ::set-output name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
       
-      - name: Commit CodeCoverage results # Step
+      - name: Commit CodeCoverage results # Step 9
         if: success() && steps.git-check.outputs.modified == 'true'
         run: |
           git config --global user.name '${{ github.actor }}'
@@ -107,14 +103,14 @@ jobs:
           git commit -m "[automated commit] Update CodeCoverage results by ${{ github.workflow }} workflow"
           git push
           
-      - name: Upload TestFramework results # Step 8
+      - name: Upload TestFramework results # Step 10
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
-      - name: Upload CodeCoverage results # Step 9
+      - name: Upload CodeCoverage results # Step 11
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
