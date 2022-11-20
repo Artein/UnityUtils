@@ -79,7 +79,7 @@ jobs:
 #        if: success() && github.ref == 'refs/heads/main'
         uses: EndBug/add-and-commit@v9.1.1
         with:
-          add: CodeCoverage/\\*
+          add: 'CodeCoverage/\\*'
           
       - name: Upload TestFramework results # Step 8
         if: always()
