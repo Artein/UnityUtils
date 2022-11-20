@@ -1,5 +1,5 @@
-name: Run project Tests
-run-name: Run project Tests
+name: Main
+run-name: Main
 
 on:
   pull_request: {}
@@ -11,12 +11,16 @@ concurrency:
   
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+ 
+# GitHub currently does not support YAML anchors
+# The idea is to get rid off duplicate action usage. Using anchors setup actions with versions once and then just use across workflow 
+#cache_action_declaration: &cache_action actions/cache@v3.0.11
   
 jobs:  
-  testAllModes: # Job 2
-    name: Run tests in all modes
+  runAllTests: # Job 1
+    name: Run all tests
     runs-on: ubuntu-latest
-    timeout-minutes: 5 # By default timeout is 360 minutes, but this repository is small
+    timeout-minutes: 5
     strategy:
       fail-fast: false
     steps:
@@ -73,6 +77,7 @@ jobs:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
+        # TODO: Zip results for better uploading
       - name: Upload CodeCoverage results # Step 8
         if: always()
         uses: actions/upload-artifact@v3.1.1
@@ -80,9 +85,14 @@ jobs:
           name: Coverage results
           path: ${{ steps.unity-test-runner.outputs.coveragePath }}
           
-      - name: Deploy CodeCoverage badge to Gist # Step 9
-        if: github.ref == 'refs/heads/main' && success()
-        uses: exuanbo/actions-deploy-gist@v1.1.4
+  deployCodeCoverageBadgeToGist: # Job 2
+    if: github.ref == 'refs/heads/main'
+    needs: runAllTests
+    name: Deploy CodeCoverage badge to Gist
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:          
+      - uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
@@ -90,3 +100,5 @@ jobs:
           gist_description: CodeCoverage badge for the main branch of UnityUtils repository
           file_path: ${{ steps.unity-test-runner.outputs.coveragePath }}/Report/badge_combined.svg
           file_type: text
+          
+  # TODO: Add separate job with committing CodeCoverage results while pushing to Main branch
