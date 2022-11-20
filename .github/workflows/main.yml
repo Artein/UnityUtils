@@ -60,7 +60,7 @@ jobs:
             Library-run-tests
             Library-
           
-      - name: Run Unity TestFramework # Step 6
+      - name: Run TestFramework # Step 6
         if: success()
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2.1.0
@@ -70,20 +70,23 @@ jobs:
           checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
           
-      - name: Upload TestFramework results # Step 7
+      - name: Zip CodeCoverage results # Step 7
+        if: success()
+        run: zip -r CodeCoverageResults.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
+          
+      - name: Upload TestFramework results # Step 8
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
-        # TODO: Zip results for better uploading
-      - name: Upload CodeCoverage results # Step 8
+      - name: Upload CodeCoverage results # Step 9
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: CodeCoverage results
-          path: ${{ steps.unity-test-runner.outputs.coveragePath }}
+          path: CodeCoverageResults.zip
           
   deployCodeCoverageResults: # Job 2
     # if: github.ref == 'refs/heads/main'
