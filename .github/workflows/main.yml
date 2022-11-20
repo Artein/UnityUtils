@@ -4,18 +4,18 @@ run-name: Main
 on:
   pull_request: {}
   push: { branches: [ main ] }
-  
+
 concurrency:
-  group: ${GITHUB_REF##*/}
+  group: ${{ github.ref_name }}
   cancel-in-progress: true
-  
+
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
  
 # GitHub currently does not support YAML anchors
 # The idea is to get rid off duplicate action usage. Using anchors setup actions with versions once and then just use across workflow 
 #cache_action_declaration: &cache_action actions/cache@v3.0.11
-  
+
 jobs:  
   runAllTests: # Job 1
     name: Run all tests
@@ -72,7 +72,7 @@ jobs:
           
       - name: Zip CodeCoverage results # Step 7
         if: success()
-        run: zip -r CodeCoverageResults.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
+        run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
           
       - name: Upload TestFramework results # Step 8
         if: always()
@@ -86,8 +86,8 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: CodeCoverage results
-          path: CodeCoverageResults.zip
-          
+          path: CodeCoverage.zip
+
   deployCodeCoverageResults: # Job 2
     # if: github.ref == 'refs/heads/main'
     needs: runAllTests
@@ -100,14 +100,9 @@ jobs:
         with:
           name: CodeCoverage results
           
-      - name: UnZip CodeCoverage results # Step 2
+      - name: Unzip CodeCoverage results # Step 2
         if: success()
-        run: unzip CodeCoverageResults.zip
-        
-        # TODO: TEST
-      - name: Show everything
-        if: success()
-        run: ls -R
+        run: unzip CodeCoverage.zip
         
       - name: Deploy CodeCoverage SVG badge to Gist # Step 3
         if: success()
@@ -116,7 +111,7 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
           gist_id: dc0873043aeff5654ce66349d38fe89d
           gist_file_name: UnityUtils-main-coverage.svg
-          gist_description: CodeCoverage badge for the main branch of UnityUtils repository
+          gist_description: CodeCoverage badge for the main branch of ${{ github.repository }} repository
           file_path: CodeCoverage/Report/badge_combined.svg
           file_type: text
           
