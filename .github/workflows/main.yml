@@ -104,6 +104,11 @@ jobs:
         if: success()
         run: unzip CodeCoverageResults.zip
         
+        # TODO: TEST
+      - name: Show everything
+        if: success()
+        run: ls -R
+        
       - name: Deploy CodeCoverage SVG badge to Gist # Step 3
         if: success()
         uses: exuanbo/actions-deploy-gist@v1.1.4
