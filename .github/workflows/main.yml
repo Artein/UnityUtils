@@ -24,6 +24,10 @@ jobs:
     strategy:
       fail-fast: false
     steps:
+      # TEMP
+      - name: Echo Actor
+        run: echo '${{ github.actor }}'
+        
       - name: Checkout repository # Step 1/a
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/checkout@v3
@@ -97,9 +101,6 @@ jobs:
           git add CodeCoverage
           git commit -m "[automated commit] Update CodeCoverage results by ${{ github.workflow }} workflow"
           git push
-          
-#      - name: Git Status
-#        run: git status
           
       - name: Upload TestFramework results # Step 8
         if: always()
