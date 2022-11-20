@@ -74,12 +74,15 @@ jobs:
         if: success()
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
         
-      - name: Commit CodeCoverage results # Step X
-        if: success()
-#        if: success() && github.ref == 'refs/heads/main'
-        uses: EndBug/add-and-commit@v9.1.1
-        with:
-          add: 'CodeCoverage/\\*'
+      - name: Git Status
+        run: git status
+      
+#      - name: Commit CodeCoverage results # Step X
+#        if: success()
+##        if: success() && github.ref == 'refs/heads/main'
+#        uses: EndBug/add-and-commit@v9.1.1
+#        with:
+#          add: 'CodeCoverage/\\*'
           
       - name: Upload TestFramework results # Step 8
         if: always()
