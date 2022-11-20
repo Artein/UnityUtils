@@ -73,16 +73,17 @@ jobs:
       - name: Zip CodeCoverage results # Step 7
         if: success()
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
-        
-      - name: Git Status
-        run: git status
       
-#      - name: Commit CodeCoverage results # Step X
-#        if: success()
-##        if: success() && github.ref == 'refs/heads/main'
-#        uses: EndBug/add-and-commit@v9.1.1
-#        with:
-#          add: 'CodeCoverage/\\*'
+      - name: Commit CodeCoverage results # Step X
+        if: success()
+#        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name '${{ github.actor }}'
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add CodeCoverage/\\*
+          git commit -m "Automated CodeCoverage results from Main workflow"
+          git push
           
       - name: Upload TestFramework results # Step 8
         if: always()
