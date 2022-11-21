@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
 using UnityUtils.Enumeration;
 
@@ -15,7 +16,7 @@ namespace Enumeration
                 results.Add(i);
             }
 
-            Assert.AreEqual(results, new List<int>{ 0, 1, 2 });
+            results.Should().Equal(new List<int> { 0, 1, 2 });
         }
         
         [Test] public void FixedRange()
@@ -26,7 +27,7 @@ namespace Enumeration
                 results.Add(i);
             }
 
-            Assert.AreEqual(results, new List<int>{ 0, 1, 2 });
+            results.Should().Equal(new List<int> { 0, 1, 2 });
         }
 
         [Test] public void OpenRange()
@@ -37,20 +38,14 @@ namespace Enumeration
                 results.Add(i);
             }
             
-            Assert.AreEqual(results, new List<int>{ 0, 1, 2 });
+            results.Should().Equal(new List<int> { 0, 1, 2 });
         }
 
         [Test] public void InfiniteRangeThrowsException()
         {
-            try
-            {
-                foreach (int i in 1..) { }
-                Assert.Fail();
-            }
-            catch (NotSupportedException exception)
-            {
-                Assert.AreEqual(exception.Message, "Range must be closed");
-            }
+            Action action = () => { foreach (int i in 1..) { } };
+
+            action.Should().Throw<NotSupportedException>().WithMessage("Range must be closed");
         }
         
         [Test] public void BackwardRange()
@@ -61,7 +56,7 @@ namespace Enumeration
                 results.Add(i);
             }
             
-            Assert.AreEqual(results, new List<int>{ 2, 1, 0 });
+            results.Should().Equal(new List<int> { 2, 1, 0 });
         }
         
         [Test] public void SingleRange()
@@ -72,7 +67,7 @@ namespace Enumeration
                 results.Add(i);
             }
             
-            Assert.AreEqual(results, new List<int>{ 2 });
+            results.Should().Equal(new List<int> { 2 });
         }
     }
 }
