@@ -118,12 +118,21 @@ jobs:
         run: git status --porcelain
         
         # TEST 2
-      - name: echo name=modified
-        run: echo name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
+      - name: if ([ -n "$(git status --porcelain)" ])
+        id: git-check-2
+        run: |
+          if ([ -n "$(git status --porcelain)" ])
+          {
+            echo "modified=true" >> $GITHUB_OUTPUT
+          }
+          else
+          {
+            echo "modified=false" >> $GITHUB_OUTPUT
+          }
         
         # TEST 3
       - name: isCodeCoverageModified
-        run: echo "${{ steps.git-check.outputs.modified }}"
+        run: echo "${{ steps.git-check-2.outputs.modified }}"
 
       - name: Commit CodeCoverage results # Step 5
         if: success() && steps.git-check.outputs.modified == 'true'
