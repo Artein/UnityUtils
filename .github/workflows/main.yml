@@ -119,7 +119,7 @@ jobs:
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add CodeCoverage
-          git commit -m "[automated commit] Update CodeCoverage results by ${{ github.workflow }} Github Action"
+          git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.pull_request.title }} PR merge (by ${{ github.workflow }} Github Action)"
           git push
         
       - name: Deploy CodeCoverage SVG badge to Gist # Step 6
