@@ -3,7 +3,6 @@ run-name: Main
 
 on:
   pull_request:
-    branches: [ main ]
     paths-ignore: [ 'CodeCoverage/**' ]
   push: 
     branches: [ main ]
@@ -29,22 +28,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:        
-      - name: Checkout repository # Step 1/a
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Checkout repository # Step 1
         uses: actions/checkout@v3
         with:
           lfs: true
           clean: true
           submodules: true
-          ref: ${{ github.head_ref }}
-          
-      - name: Checkout repository # Step 1/b
-        if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@v3
-        with:
-          lfs: true
-          clean: true
-          submodules: true
+          ref: ${{ github.event.pull_request.head.ref }} # On push event will be replaced with '' which is default value
 
       - name: Create LFS files list # Step 2
         if: success()
