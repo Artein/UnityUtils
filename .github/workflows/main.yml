@@ -2,8 +2,10 @@ name: Main
 run-name: Main
 
 on:
-  pull_request: {}
-  push: { branches: [ main ] }
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref_name }}
@@ -30,13 +32,12 @@ jobs:
           lfs: true
           clean: true
           submodules: true
+          ref: ${{ github.event.pull_request.head.ref }} # On push event will be replaced with '' which is default value
 
       - name: Create LFS files list # Step 2
-        if: success()
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
       - name: Restore LFS cache # Step 3
-        if: success()
         id: lfs-cache
         uses: actions/cache@v3.0.11
         with:
@@ -44,14 +45,12 @@ jobs:
           key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
 
       - name: Git LFS Pull # Step 4
-        if: success()
         run: |
           git lfs pull
           git add .
           git reset --hard
           
       - name: Restore Library cache # Step 5
-        if: success()
         uses: actions/cache@v3.0.11
         with:
           path: Library
@@ -61,7 +60,6 @@ jobs:
             Library-
           
       - name: Run TestFramework # Step 6
-        if: success()
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2.1.0
         with:
@@ -71,7 +69,6 @@ jobs:
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
           
       - name: Zip CodeCoverage results # Step 7
-        if: success()
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
           
       - name: Upload TestFramework results # Step 8
@@ -95,17 +92,37 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 1
     steps:
-      - name: Download CodeCoverage results # Step 1
+      - name: Checkout repository # Step 1
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          clean: true
+          submodules: true
+          ref: gh-pages
+          
+      - name: Download CodeCoverage results # Step 2
         uses: actions/download-artifact@v3.0.1
         with:
           name: CodeCoverage results
           
-      - name: Unzip CodeCoverage results # Step 2
-        if: success()
+      - name: Unzip CodeCoverage results # Step 3
         run: unzip CodeCoverage.zip
+
+      - name: Check for modified files # Step 4
+        id: git-check
+        run: echo ::set-output name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
+
+      - name: Commit CodeCoverage results # Step 5
+        if: success() && steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name '${{ github.actor }}'
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add CodeCoverage
+          git commit -m "[automated commit] Update CodeCoverage results by ${{ github.workflow }} Github Action"
+          git push
         
-      - name: Deploy CodeCoverage SVG badge to Gist # Step 3
-        if: success()
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 6
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
@@ -114,5 +131,3 @@ jobs:
           gist_description: CodeCoverage badge for the main branch of ${{ github.repository }} repository
           file_path: CodeCoverage/Report/badge_combined.svg
           file_type: text
-          
-  # TODO: Add separate step with committing CodeCoverage results while pushing to Main branch
