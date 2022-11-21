@@ -118,7 +118,11 @@ jobs:
         run: git status --porcelain
         
         # TEST 2
-      - name: git-check.outputs.modified
+      - name: echo name=modified
+        run: echo name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
+        
+        # TEST 3
+      - name: isCodeCoverageModified
         run: echo "${{ steps.git-check.outputs.modified }}"
 
       - name: Commit CodeCoverage results # Step 5
