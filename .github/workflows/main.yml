@@ -111,6 +111,14 @@ jobs:
       - name: Check for modified files # Step 4
         id: git-check
         run: echo name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi) >> $GITHUB_OUTPUT
+        
+        # TEST 1
+      - name: Git Status --porcelain
+        run: git status --porcelain
+        
+        # TEST 2
+      - name: git-check.outputs.modified
+        run: echo ${{ steps.git-check.outputs.modified }}
 
       - name: Commit CodeCoverage results # Step 5
         if: success() && steps.git-check.outputs.modified == 'true'
