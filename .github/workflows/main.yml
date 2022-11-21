@@ -108,8 +108,11 @@ jobs:
           
       - name: Unzip CodeCoverage results # Step 3
         run: unzip -o CodeCoverage.zip
+        
+      - name: Remove CodeCoverage.zip # Step 4
+        run: rm CodeCoverage.zip
 
-      - name: Check for modified files # Step 4
+      - name: Check for modified files # Step 5
         id: git-check
         run: echo name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi) >> $GITHUB_OUTPUT
         
@@ -118,17 +121,9 @@ jobs:
         run: git status --porcelain
         
         # TEST 2
-      - name: if ([ -n "$(git status --porcelain)" ])
+      - name: git-check-2
         id: git-check-2
-        run: |
-          if ([ -n "$(git status --porcelain)" ])
-          {
-            echo "modified=true" >> $GITHUB_OUTPUT
-          }
-          else
-          {
-            echo "modified=false" >> $GITHUB_OUTPUT
-          }
+        run: echo "$( if [ $(git status --porcelain | wc -l) ]; then echo "modified=true"; else echo "modified=false"; fi )" >> $GITHUB_OUTPUT
         
         # TEST 3
       - name: isCodeCoverageModified
