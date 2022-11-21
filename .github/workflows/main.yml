@@ -106,7 +106,7 @@ jobs:
           name: CodeCoverage results
           
       - name: Unzip CodeCoverage results # Step 3
-        run: unzip CodeCoverage.zip
+        run: unzip -o CodeCoverage.zip
 
       - name: Check for modified files # Step 4
         id: git-check
