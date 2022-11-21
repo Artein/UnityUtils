@@ -119,7 +119,7 @@ jobs:
         
         # TEST 2
       - name: git-check.outputs.modified
-        run: echo ${{ steps.git-check.outputs.modified }}
+        run: echo "${{ steps.git-check.outputs.modified }}"
 
       - name: Commit CodeCoverage results # Step 5
         if: success() && steps.git-check.outputs.modified == 'true'
