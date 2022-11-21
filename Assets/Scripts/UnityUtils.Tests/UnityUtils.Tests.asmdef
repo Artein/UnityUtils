@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "UnityUtils",
-        "UnityEngine.TestRunner"
+        "UnityEngine.TestRunner",
+        "BoundfoxStudios.FluentAssertions"
     ],
     "includePlatforms": [
         "Editor"
