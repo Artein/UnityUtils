@@ -1,0 +1,21 @@
+name: Main pass status check for autocommit
+run-name: Main
+
+on:
+  pull_request:
+    paths: [ 'CodeCoverage/**' ]
+  push: 
+    branches: [ main ]
+    paths: [ 'CodeCoverage/**' ]
+
+concurrency:
+  group: ${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:  
+  passStatusCheck: # Job 1
+    name: Pass status check
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:        
+      - run: echo "Pass status check"
