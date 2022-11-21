@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using NUnit.Framework;
 using UnityUtils.Invocation;
 
@@ -6,28 +7,28 @@ namespace Invocation
 {
     public class DisposableActionTests
     {
-        [Test] public void DisposableAction_Fires_AfterHandleReleased()
+        [Test] public void Fires_AfterHandleReleased()
         {
             int callCount = 0;
             void MyAction() => callCount++;
 
             var disposableAction = new DisposableAction(MyAction);
             disposableAction.Dispose();
-            
-            Assert.AreEqual(callCount, 1);
+
+            callCount.Should().Be(1);
         }
         
-        [Test] public void DisposableAction_DontFires_WhenHandleDontReleased()
+        [Test] public void DontFires_WhenHandleWasntReleased()
         {
             int callCount = 0;
             void MyAction() => callCount++;
 
             var disposableAction = new DisposableAction(MyAction);
-            
-            Assert.AreEqual(callCount, 0);
+
+            callCount.Should().Be(0);
         }
 
-        [Test] public void DisposableAction_Fires_WithCorrectArguments()
+        [Test] public void Fires_WithCorrectArguments()
         {
             int receivedInt = int.MinValue;
             float receivedFloat = float.MinValue;
@@ -40,15 +41,15 @@ namespace Invocation
                 receivedString = arg3;
             }
 
-            int passedInt = 5;
-            float passedFloat = 6.3f;
-            string passedString = "asdf";
+            const int passedInt = 5;
+            const float passedFloat = 6.3f;
+            const string passedString = "asdf";
             var disposableAction = new DisposableAction<Action<int, float, string>>(MyAction, passedInt, passedFloat, passedString);
             disposableAction.Dispose();
-            
-            Assert.AreEqual(passedInt, receivedInt);
-            Assert.AreEqual(passedFloat, receivedFloat);
-            Assert.AreEqual(passedString, receivedString);
+
+            receivedInt.Should().Be(passedInt);
+            receivedFloat.Should().Be(passedFloat);
+            receivedString.Should().Be(passedString);
         }
     }
 }

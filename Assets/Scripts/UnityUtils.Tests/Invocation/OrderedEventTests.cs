@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
 using UnityUtils.Invocation;
 
@@ -7,7 +8,7 @@ namespace Invocation
 {
     public class OrderedEventTests
     {
-        [Test] public void OrderedEvent_Fires()
+        [Test] public void Fires()
         {
             int callCount = 0;
             void LocalFunction() => callCount++;
@@ -16,23 +17,18 @@ namespace Invocation
             
             orderedEvent.Fire();
 
-            Assert.AreEqual(1, callCount);
+            callCount.Should().Be(1);
         }
 
-        [Test] public void OrderedEvent_NoExceptions_WhenFires_WithoutSubscribers()
+        [Test] public void NoExceptions_WhenFires_WithoutSubscribers()
         {
-            try
-            {
-                var orderedEvent = new OrderedEvent();
-                orderedEvent.Fire();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            var orderedEvent = new OrderedEvent();
+            Action action = () => orderedEvent.Fire();
+
+            action.Should().NotThrow();
         }
 
-        [Test] public void OrderedEvent_WhenFires_SubscribersReceiveEvents_InRightOrder()
+        [Test] public void WhenFires_SubscribersReceiveEvents_InRightOrder()
         {
             var receivedEvents = new List<int>();
             void LocalFunction1() => receivedEvents.Add(1);
@@ -46,11 +42,11 @@ namespace Invocation
             using var handle2 = orderedEvent.Subscribe(2, LocalFunction2);
             
             orderedEvent.Fire();
-            
-            Assert.AreEqual(new List<int>{ 1, 2, 3, 4 }, receivedEvents);
+
+            receivedEvents.Should().Equal(new List<int> { 1, 2, 3, 4 });
         }
 
-        [Test] public void OrderedEvent_AfterReceiverUnsubscribed_Fires_WithoutSendingEvent_ToUnsubscribedReceiver()
+        [Test] public void AfterReceiverUnsubscribed_Fires_WithoutSendingEvent_ToUnsubscribedReceiver()
         {
             var receivedEvents = new List<int>();
             void LocalFunction1() => receivedEvents.Add(1);
@@ -65,8 +61,8 @@ namespace Invocation
             
             handle3.Dispose();
             orderedEvent.Fire();
-            
-            Assert.AreEqual(new List<int>{ 1, 2, 4 }, receivedEvents);
+
+            receivedEvents.Should().Equal(new List<int> { 1, 2, 4 });
         }
     }
 }
