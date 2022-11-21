@@ -85,7 +85,7 @@ jobs:
           name: CodeCoverage results
           path: CodeCoverage.zip
 
-  deployCodeCoverageResults: # Job 2
+  deployCodeCoverageResults: # Job 2 (push only events)
     if: github.ref == 'refs/heads/main'
     needs: runAllTests
     name: Deploy CodeCoverage results
@@ -115,11 +115,11 @@ jobs:
       - name: Commit CodeCoverage results # Step 5
         if: success() && steps.git-check.outputs.modified == 'true'
         run: |
-          git config --global user.name '${{ github.actor }}'
-          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+          git config --global user.name '${{ github.event.push.sender }}'
+          git config --global user.email '${{ github.event.push.pusher.email }}'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add CodeCoverage
-          git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.pull_request.title }} PR merge (by ${{ github.workflow }} Github Action)"
+          git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.push.after }} commit after PR merge (invoked by ${{ github.workflow }} Action)"
           git push
         
       - name: Deploy CodeCoverage SVG badge to Gist # Step 6
