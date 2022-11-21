@@ -113,24 +113,11 @@ jobs:
         run: rm CodeCoverage.zip
 
       - name: Check for modified files # Step 5
-        id: git-check
-        run: echo name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi) >> $GITHUB_OUTPUT
-        
-        # TEST 1
-      - name: Git Status --porcelain
-        run: git status --porcelain
-        
-        # TEST 2
-      - name: git-check-2
-        id: git-check-2
+        id: checkCodeCoverageFiles
         run: echo "$( if [ $(git status --porcelain | wc -l) ]; then echo "modified=true"; else echo "modified=false"; fi )" >> $GITHUB_OUTPUT
-        
-        # TEST 3
-      - name: isCodeCoverageModified
-        run: echo "${{ steps.git-check-2.outputs.modified }}"
 
-      - name: Commit CodeCoverage results # Step 5
-        if: success() && steps.git-check.outputs.modified == 'true'
+      - name: Commit CodeCoverage results # Step 6
+        if: success() && steps.checkCodeCoverageFiles.outputs.modified == 'true'
         run: |
           git config --global user.name '${{ github.event.push.sender }}'
           git config --global user.email '${{ github.event.push.pusher.email }}'
@@ -139,7 +126,7 @@ jobs:
           git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.push.after }} commit after PR merge (invoked by ${{ github.workflow }} Action)"
           git push
         
-      - name: Deploy CodeCoverage SVG badge to Gist # Step 6
+      - name: Deploy CodeCoverage SVG badge to Gist # Step 7
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
           token: ${{ secrets.GIST_TOKEN }}
