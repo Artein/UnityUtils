@@ -86,7 +86,8 @@ jobs:
           path: CodeCoverage.zip
 
   deployCodeCoverageResults: # Job 2 (push only events)
-    if: github.ref == 'refs/heads/main'
+    # UNCOMMENT THIS
+    # if: github.ref == 'refs/heads/main'
     needs: runAllTests
     name: Deploy CodeCoverage results
     runs-on: ubuntu-latest
