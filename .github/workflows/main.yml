@@ -118,8 +118,8 @@ jobs:
       - name: Commit CodeCoverage results # Step 6
         if: success() && steps.checkCodeCoverageFiles.outputs.modified == 'true'
         run: |
-          git config --global user.name '${{ github.event.push.sender }}'
-          git config --global user.email '${{ github.event.push.pusher.email }}'
+          git config --global user.name '${{ github.actor }}'
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add CodeCoverage
           git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.push.after }} commit after PR merge (invoked by ${{ github.workflow }} Action)"
