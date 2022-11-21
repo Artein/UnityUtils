@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageReport scope="Summary">
   <Summary>
-    <Generatedon>11/21/2022 - 10:41:47</Generatedon>
+    <Generatedon>11/21/2022 - 20:04:21</Generatedon>
     <Parser>OpenCoverParser</Parser>
     <Assemblies>1</Assemblies>
     <Classes>4</Classes>
     <Files>3</Files>
-    <Coveredlines>68</Coveredlines>
-    <Uncoveredlines>3</Uncoveredlines>
+    <Coveredlines>71</Coveredlines>
+    <Uncoveredlines>0</Uncoveredlines>
     <Coverablelines>71</Coverablelines>
     <Totallines>144</Totallines>
-    <Linecoverage>95.7</Linecoverage>
+    <Linecoverage>100</Linecoverage>
     <Coveredbranches>0</Coveredbranches>
     <Totalbranches>0</Totalbranches>
   </Summary>
   <Coverage>
-    <Assembly name="UnityUtils" classes="4" coverage="95.7" coveredlines="68" coverablelines="71" totallines="198" branchcoverage="" coveredbranches="0" totalbranches="0">
+    <Assembly name="UnityUtils" classes="4" coverage="100" coveredlines="71" coverablelines="71" totallines="198" branchcoverage="" coveredbranches="0" totalbranches="0">
       <Class name="UnityUtils.Enumeration.RangeEnumerationExtensions" coverage="100" coveredlines="19" coverablelines="19" totallines="44" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Invocation.DisposableAction" coverage="100" coveredlines="11" coverablelines="11" totallines="54" branchcoverage="" coveredbranches="0" totalbranches="0" />
-      <Class name="UnityUtils.Invocation.DisposableAction[T]" coverage="84.2" coveredlines="16" coverablelines="19" totallines="54" branchcoverage="" coveredbranches="0" totalbranches="0" />
+      <Class name="UnityUtils.Invocation.DisposableAction[T]" coverage="100" coveredlines="19" coverablelines="19" totallines="54" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Invocation.OrderedEvent" coverage="100" coveredlines="22" coverablelines="22" totallines="46" branchcoverage="" coveredbranches="0" totalbranches="0" />
     </Assembly>
   </Coverage>
