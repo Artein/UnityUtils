@@ -51,5 +51,16 @@ namespace Invocation
             receivedFloat.Should().Be(passedFloat);
             receivedString.Should().Be(passedString);
         }
+
+        [Test] public void GenericVersion_Fires_WithoutPassingParameters()
+        {
+            int callCount = 0;
+            void MyAction() => callCount++;
+
+            var disposableAction = new DisposableAction<Action>(MyAction);
+            disposableAction.Dispose();
+
+            callCount.Should().Be(1);
+        }
     }
 }
