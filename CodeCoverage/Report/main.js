@@ -225,8 +225,8 @@ var assemblies = [
     "name": "UnityUtils",
     "classes": [
       { "name": "UnityUtils.Enumeration.RangeEnumerationExtensions", "rp": "UnityUtils_RangeEnumerationExtensions.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.DisposableAction", "rp": "UnityUtils_DisposableAction.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 54, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.DisposableAction[T]", "rp": "UnityUtils_DisposableAction_T_.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 54, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.DisposableAction", "rp": "UnityUtils_DisposableAction.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 46, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.DisposableAction[TArgs]", "rp": "UnityUtils_DisposableAction_TArgs_.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 46, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "UnityUtils.Invocation.OrderedEvent", "rp": "UnityUtils_OrderedEvent.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 46, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
