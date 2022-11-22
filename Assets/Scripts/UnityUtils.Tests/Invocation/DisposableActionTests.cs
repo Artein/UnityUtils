@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using NUnit.Framework;
 using UnityUtils.Invocation;
@@ -27,40 +26,51 @@ namespace Invocation
 
             callCount.Should().Be(0);
         }
-
-        [Test] public void Fires_WithCorrectArguments()
-        {
-            int receivedInt = int.MinValue;
-            float receivedFloat = float.MinValue;
-            string receivedString = null;
-            
-            void MyAction(int arg1, float arg2, string arg3)
-            {
-                receivedInt = arg1;
-                receivedFloat = arg2;
-                receivedString = arg3;
-            }
-
-            const int passedInt = 5;
-            const float passedFloat = 6.3f;
-            const string passedString = "asdf";
-            var disposableAction = new DisposableAction<Action<int, float, string>>(MyAction, passedInt, passedFloat, passedString);
-            disposableAction.Dispose();
-
-            receivedInt.Should().Be(passedInt);
-            receivedFloat.Should().Be(passedFloat);
-            receivedString.Should().Be(passedString);
-        }
-
-        [Test] public void GenericVersion_Fires_WithoutPassingParameters()
+        
+        [Test] public void WithArguments_Fires_AfterHandleReleased()
         {
             int callCount = 0;
-            void MyAction() => callCount++;
+            void MyAction(Args _) => callCount++;
 
-            var disposableAction = new DisposableAction<Action>(MyAction);
+            var disposableAction = new DisposableAction<Args>(MyAction, new Args());
             disposableAction.Dispose();
 
             callCount.Should().Be(1);
+        }
+        
+        [Test] public void WithArguments_DontFires_WhenHandleWasntReleased()
+        {
+            int callCount = 0;
+            void MyAction(Args _) => callCount++;
+
+            var disposableAction = new DisposableAction<Args>(MyAction, new Args());
+
+            callCount.Should().Be(0);
+        }
+
+        [Test] public void WithArguments_Fires_HavingCorrectArguments()
+        {
+            var receivedArgs = new Args();
+            
+            void MyAction(Args args)
+            {
+                receivedArgs = args;
+            }
+
+            var passedArgs = new Args { Int = 5, Float = 6.3f, String = "asdf" };
+            var disposableAction = new DisposableAction<Args>(MyAction, passedArgs);
+            disposableAction.Dispose();
+
+            receivedArgs.Int.Should().Be(passedArgs.Int);
+            receivedArgs.Float.Should().Be(passedArgs.Float);
+            receivedArgs.String.Should().Be(passedArgs.String);
+        }
+
+        private struct Args
+        {
+            public int Int;
+            public float Float;
+            public string String;
         }
     }
 }
