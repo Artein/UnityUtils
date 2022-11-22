@@ -98,5 +98,22 @@ namespace Invocation
 
             callsCount.Should().Be(0);
         }
+
+        [Test] public void Invocation_PassingDisposableAction()
+        {
+            const int passedInt = 5;
+            var receivedArgs = new Args();
+            void SomeAction(Args args) => receivedArgs = args;
+            
+            var di = new DeferredInvocation(new DisposableAction<Args>(SomeAction, new Args { Value = passedInt }));
+            di.Dispose();
+
+            receivedArgs.Value.Should().Be(passedInt);
+        }
+
+        private struct Args
+        {
+            public int Value;
+        }
     }
 }

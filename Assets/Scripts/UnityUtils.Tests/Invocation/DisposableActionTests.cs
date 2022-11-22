@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using NUnit.Framework;
 using UnityUtils.Invocation;
@@ -11,7 +12,7 @@ namespace Invocation
             int callCount = 0;
             void MyAction() => callCount++;
 
-            var disposableAction = new DisposableAction(MyAction);
+            IDisposable disposableAction = new DisposableAction(MyAction);
             disposableAction.Dispose();
 
             callCount.Should().Be(1);
@@ -22,7 +23,7 @@ namespace Invocation
             int callCount = 0;
             void MyAction() => callCount++;
 
-            var disposableAction = new DisposableAction(MyAction);
+            var _ = new DisposableAction(MyAction);
 
             callCount.Should().Be(0);
         }
@@ -32,7 +33,7 @@ namespace Invocation
             int callCount = 0;
             void MyAction(Args _) => callCount++;
 
-            var disposableAction = new DisposableAction<Args>(MyAction, new Args());
+            IDisposable disposableAction = new DisposableAction<Args>(MyAction, new Args());
             disposableAction.Dispose();
 
             callCount.Should().Be(1);
@@ -43,7 +44,7 @@ namespace Invocation
             int callCount = 0;
             void MyAction(Args _) => callCount++;
 
-            var disposableAction = new DisposableAction<Args>(MyAction, new Args());
+            var _ = new DisposableAction<Args>(MyAction, new Args());
 
             callCount.Should().Be(0);
         }
@@ -58,7 +59,7 @@ namespace Invocation
             }
 
             var passedArgs = new Args { Int = 5, Float = 6.3f, String = "asdf" };
-            var disposableAction = new DisposableAction<Args>(MyAction, passedArgs);
+            IDisposable disposableAction = new DisposableAction<Args>(MyAction, passedArgs);
             disposableAction.Dispose();
 
             receivedArgs.Int.Should().Be(passedArgs.Int);

@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
 {
@@ -12,6 +13,13 @@ namespace UnityUtils.Invocation
         {
             _locksCount = 1;
             _actionHandle = new DisposableAction(action);
+        }
+
+        // Invocation is locked by default at creation. Call Dispose() to unlock
+        public DeferredInvocation([NotNull] IDisposableAction disposableAction)
+        {
+            _locksCount = 1;
+            _actionHandle = disposableAction;
         }
 
         IDisposable IDeferredInvocation.Lock()
@@ -44,26 +52,6 @@ namespace UnityUtils.Invocation
                 _actionHandle.Dispose();
                 _actionHandle = null;
             }
-        }
-    }
-
-    // TODO: Continue with generic version
-    public class DeferredInvocation<TArgs> : IDeferredInvocation
-        where TArgs : struct
-    {
-        public DeferredInvocation(DisposableAction<TArgs> disposableAction)
-        {
-            
-        }
-        
-        public IDisposable Lock()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Cancel()
-        {
-            throw new NotImplementedException();
         }
     }
 }
