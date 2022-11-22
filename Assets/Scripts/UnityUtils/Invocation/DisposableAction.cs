@@ -22,31 +22,23 @@ namespace UnityUtils.Invocation
         }
     }
     
-    public class DisposableAction<T> : IDisposable where T : Delegate
+    public class DisposableAction<TArgs> : IDisposable 
+        where TArgs : struct
     {
-        private T _action;
-        private readonly object[] _args;
+        private Action<TArgs> _action;
+        private readonly TArgs _args;
             
-        public DisposableAction([NotNull] T action, params object[] args)
+        public DisposableAction([NotNull] Action<TArgs> action, TArgs args)
         {
             _action = action;
-
-            if (args.Length > 0)
-            {
-                _args = new object[args.Length];
-                args.CopyTo(_args, 0);
-            }
-            else
-            {
-                _args = Array.Empty<object>();
-            }
+            _args = args;
         }
         
         public void Dispose()
         {
             if (_action != null)
             {
-                _action.DynamicInvoke(_args);
+                _action.Invoke(_args);
                 _action = null;
             }
         }

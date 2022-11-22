@@ -16,7 +16,7 @@ namespace UnityUtils.Examples.Invocation
             public IDisposable Store(int number)
             {
                 _numbers.Add(number);
-                return new DisposableAction<Action<int>>(Remove, number);
+                return new DisposableAction<int>(Remove, number);
             }
 
             private void Remove(int number)
