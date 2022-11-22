@@ -3,18 +3,24 @@ using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
 {
-    public class DisposableAction : IDisposable
+    public interface IDisposableAction : IDisposable
+    {
+        bool IsDisposed { get; }
+    }
+    
+    public class DisposableAction : IDisposableAction
     {
         private Action _action;
+        public bool IsDisposed => _action == null;
 
         public DisposableAction([NotNull] Action action)
         {
             _action = action;
         }
     
-        public void Dispose()
+        void IDisposable.Dispose()
         {
-            if (_action != null)
+            if (!IsDisposed)
             {
                 _action.Invoke();
                 _action = null;
@@ -22,11 +28,12 @@ namespace UnityUtils.Invocation
         }
     }
     
-    public class DisposableAction<TArgs> : IDisposable 
+    public class DisposableAction<TArgs> : IDisposableAction 
         where TArgs : struct
     {
         private Action<TArgs> _action;
         private readonly TArgs _args;
+        public bool IsDisposed => _action == null;
             
         public DisposableAction([NotNull] Action<TArgs> action, TArgs args)
         {
@@ -34,9 +41,9 @@ namespace UnityUtils.Invocation
             _args = args;
         }
         
-        public void Dispose()
+        void IDisposable.Dispose()
         {
-            if (_action != null)
+            if (!IsDisposed)
             {
                 _action.Invoke(_args);
                 _action = null;
