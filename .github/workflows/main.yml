@@ -59,7 +59,7 @@ jobs:
             Library-run-tests
             Library-
             
-      - name: Checkout gh-pages branch into gh-pages directory # Step
+      - name: Checkout gh-pages branch into gh-pages directory # Step 6
         uses: actions/checkout@v3
         with:
           lfs: true
@@ -68,14 +68,10 @@ jobs:
           ref: gh-pages
           path: gh-pages
           
-      - name: Copy CodeCoverage results from previous runs # Step
+      - name: Copy CodeCoverage directory to the root # Step 7. It will be updated with new results and create coverage history
         run: cp -R gh-pages/CodeCoverage .
-        
-        # TEST
-      - name: ls -a
-        run: ls -a
           
-      - name: Run TestFramework # Step 6
+      - name: Run TestFramework # Step 8
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2.1.0
         with:
@@ -84,25 +80,25 @@ jobs:
           checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
           
-      - name: Zip CodeCoverage results # Step 7
+      - name: Zip CodeCoverage results # Step 9
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
           
-      - name: Upload TestFramework results # Step 8
+      - name: Upload TestFramework results # Step 10
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
           
-      - name: Upload CodeCoverage results # Step 9
+      - name: Upload CodeCoverage results # Step 11
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: CodeCoverage results
           path: CodeCoverage.zip
 
-  deployCodeCoverageResults: # Job 2 (push only events due to if on main branch)
-    if: github.ref == 'refs/heads/main'
+  deployCodeCoverageResults: # Job 2
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: runAllTests
     name: Deploy CodeCoverage results
     runs-on: ubuntu-latest
