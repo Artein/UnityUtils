@@ -58,6 +58,22 @@ jobs:
           restore-keys: |
             Library-run-tests
             Library-
+            
+      - name: Checkout gh-pages branch into gh-pages directory # Step
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          clean: true
+          submodules: true
+          ref: gh-pages
+          path: gh-pages
+          
+      - name: Copy CodeCoverage results from previous runs # Step
+        run: cp -R gh-pages/CodeCoverage .
+        
+        # TEST
+      - name: ls -a
+        run: ls -a
           
       - name: Run TestFramework # Step 6
         id: unity-test-runner
