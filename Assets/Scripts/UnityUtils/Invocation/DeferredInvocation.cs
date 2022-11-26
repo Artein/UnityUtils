@@ -9,12 +9,18 @@ namespace UnityUtils.Invocation
     {
         private int _locksCount;
         private IDisposable _actionHandle;
+#if UU_DI_STACKTRACE
+        private readonly StackTrace _stackTraceOnCreation;
+#endif 
         
         // Invocation is locked by default at creation. Call Dispose() to unlock
         public DeferredInvocation(Action action)
         {
             _locksCount = 1;
             _actionHandle = new DisposableAction(action);
+#if UU_DI_STACKTRACE
+            _stackTraceOnCreation = new StackTrace(true);
+#endif
         }
 
         // Invocation is locked by default at creation. Call Dispose() to unlock
@@ -38,6 +44,9 @@ namespace UnityUtils.Invocation
 
         public void Dispose()
         {
+#if UU_DI_STACKTRACE
+            UnityEngine.Debug.Log($"{_stackTraceOnCreation}");
+#endif
             Unlock();
         }
 
