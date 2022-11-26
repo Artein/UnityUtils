@@ -10,7 +10,7 @@ namespace UnityUtils.Invocation
         private int _locksCount;
         private IDisposable _actionHandle;
 #if UU_DI_STACKTRACE
-        private readonly StackTrace _stackTraceOnCreation;
+        private readonly string _stackTraceOnCreation;
 #endif 
         
         // Invocation is locked by default at creation. Call Dispose() to unlock
@@ -19,7 +19,7 @@ namespace UnityUtils.Invocation
             _locksCount = 1;
             _actionHandle = new DisposableAction(action);
 #if UU_DI_STACKTRACE
-            _stackTraceOnCreation = new StackTrace(true);
+            _stackTraceOnCreation = UnityEngine.StackTraceUtility.ExtractStackTrace();
 #endif
         }
 
