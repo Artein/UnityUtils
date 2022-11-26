@@ -39,6 +39,12 @@ namespace UnityUtils.Invocation
             Unlock();
         }
 
+        public override string ToString()
+        {
+            return $"{nameof(_locksCount)}: {_locksCount} | " + 
+                   $"{nameof(_actionHandle)}: {(_actionHandle == null ? "null" : _actionHandle)}";
+        }
+
         private void Unlock()
         {
             _locksCount -= 1;
