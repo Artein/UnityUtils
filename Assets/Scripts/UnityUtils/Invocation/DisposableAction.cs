@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
@@ -8,6 +9,8 @@ namespace UnityUtils.Invocation
         bool IsDisposed { get; }
     }
     
+    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+                     "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method}")]
     public class DisposableAction : IDisposableAction
     {
         private Action _action;
@@ -26,14 +29,11 @@ namespace UnityUtils.Invocation
                 _action = null;
             }
         }
-
-        public override string ToString()
-        {
-            return $"{nameof(IsDisposed)}: {IsDisposed} | " + 
-                   $"{nameof(_action)}: {(IsDisposed ? "null" : $"'{_action.Target}___{_action.Method}'")}";
-        }
     }
     
+    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+                     "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method} | " +
+                     "_args: {_args}")]
     public class DisposableAction<TArgs> : IDisposableAction 
         where TArgs : struct
     {
@@ -54,13 +54,6 @@ namespace UnityUtils.Invocation
                 _action.Invoke(_args);
                 _action = null;
             }
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(IsDisposed)}: {IsDisposed} | " + 
-                   $"{nameof(_action)}: {(IsDisposed ? "null" : $"'{_action.Target}___{_action.Method}")}' | " +
-                   $"{nameof(_args)}: {_args}";
         }
     }
 }
