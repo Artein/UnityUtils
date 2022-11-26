@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageReport scope="Summary">
   <Summary>
-    <Generatedon>11/26/2022 - 12:10:31</Generatedon>
+    <Generatedon>11/26/2022 - 18:31:13</Generatedon>
     <Parser>OpenCoverParser</Parser>
     <Assemblies>1</Assemblies>
     <Classes>5</Classes>
     <Files>4</Files>
     <Coveredlines>97</Coveredlines>
-    <Uncoveredlines>13</Uncoveredlines>
-    <Coverablelines>110</Coverablelines>
-    <Totallines>250</Totallines>
-    <Linecoverage>88.1</Linecoverage>
+    <Uncoveredlines>0</Uncoveredlines>
+    <Coverablelines>97</Coverablelines>
+    <Totallines>252</Totallines>
+    <Linecoverage>100</Linecoverage>
     <Coveredbranches>0</Coveredbranches>
     <Totalbranches>0</Totalbranches>
   </Summary>
   <Coverage>
-    <Assembly name="UnityUtils" classes="5" coverage="88.1" coveredlines="97" coverablelines="110" totallines="309" branchcoverage="" coveredbranches="0" totalbranches="0">
+    <Assembly name="UnityUtils" classes="5" coverage="100" coveredlines="97" coverablelines="97" totallines="311" branchcoverage="" coveredbranches="0" totalbranches="0">
       <Class name="UnityUtils.Enumeration.RangeEnumerationExtensions" coverage="100" coveredlines="19" coverablelines="19" totallines="44" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Invocation.DeferredInvocation" coverage="100" coveredlines="31" coverablelines="31" totallines="68" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Invocation.DisposableAction" coverage="100" coveredlines="12" coverablelines="12" totallines="59" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Invocation.DisposableAction[TArgs]" coverage="100" coveredlines="13" coverablelines="13" totallines="59" branchcoverage="" coveredbranches="0" totalbranches="0" />
-      <Class name="UnityUtils.Invocation.OrderedEvent" coverage="62.8" coveredlines="22" coverablelines="35" totallines="79" branchcoverage="" coveredbranches="0" totalbranches="0" />
+      <Class name="UnityUtils.Invocation.OrderedEvent" coverage="100" coveredlines="22" coverablelines="22" totallines="81" branchcoverage="" coveredbranches="0" totalbranches="0" />
     </Assembly>
   </Coverage>
 </CoverageReport>

@@ -228,7 +228,7 @@ var assemblies = [
       { "name": "UnityUtils.Invocation.DeferredInvocation", "rp": "UnityUtils_DeferredInvocation.html", "cl": 31, "ucl": 0, "cal": 31, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "UnityUtils.Invocation.DisposableAction", "rp": "UnityUtils_DisposableAction.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 59, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "UnityUtils.Invocation.DisposableAction[TArgs]", "rp": "UnityUtils_DisposableAction_TArgs_.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 59, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.OrderedEvent", "rp": "UnityUtils_OrderedEvent.html", "cl": 22, "ucl": 13, "cal": 35, "tl": 79, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.OrderedEvent", "rp": "UnityUtils_OrderedEvent.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 81, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
