@@ -14,13 +14,10 @@ namespace UnityUtils.Invocation
             var pair = new KeyValuePair<int, Action>(order, action);
             _orderedActions.Add(pair);
             // Performance: based on the use case we can also sort right before firing event
-            // Depends on subscription amount to firing amount
+            // Depends on subscription amount and firing amount
             _orderedActions.Sort(Comparator.Default);
 
-            return new DisposableAction(() =>
-            {
-                _orderedActions.Remove(pair);
-            });
+            return new DisposableAction<KeyValuePair<int, Action>>(Remove, pair);
         }
 
         public void Fire()
@@ -32,7 +29,12 @@ namespace UnityUtils.Invocation
                 action.Invoke();
             }
         }
-        
+
+        private void Remove(KeyValuePair<int, Action> pair)
+        {
+            _orderedActions.Remove(pair);
+        }
+
         private class Comparator : IComparer<KeyValuePair<int, Action>>
         {
             public static readonly Comparator Default = new();
