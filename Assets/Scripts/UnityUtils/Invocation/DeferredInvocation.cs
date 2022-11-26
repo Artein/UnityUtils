@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
 {
+    [DebuggerDisplay("_locksCount: {_locksCount} | _actionHandle: {_actionHandle}")]
     public class DeferredInvocation : IDeferredInvocation, IDisposable
     {
         private int _locksCount;
@@ -37,12 +39,6 @@ namespace UnityUtils.Invocation
         public void Dispose()
         {
             Unlock();
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(_locksCount)}: {_locksCount} | " + 
-                   $"{nameof(_actionHandle)}: {(_actionHandle == null ? "null" : _actionHandle)}";
         }
 
         private void Unlock()
