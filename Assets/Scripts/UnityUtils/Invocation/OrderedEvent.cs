@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
+using UnityEngine.TestTools;
 
 namespace UnityUtils.Invocation
 {
@@ -49,6 +50,7 @@ namespace UnityUtils.Invocation
         }
 
 #region DebuggerProxy
+        [ExcludeFromCoverage]
         private class DebuggerProxy
         {
             private readonly OrderedEvent _orderedEvent;
