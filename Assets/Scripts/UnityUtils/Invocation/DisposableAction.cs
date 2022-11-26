@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
@@ -8,6 +9,8 @@ namespace UnityUtils.Invocation
         bool IsDisposed { get; }
     }
     
+    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+                     "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method}")]
     public class DisposableAction : IDisposableAction
     {
         private Action _action;
@@ -28,6 +31,9 @@ namespace UnityUtils.Invocation
         }
     }
     
+    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+                     "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method} | " +
+                     "_args: {_args}")]
     public class DisposableAction<TArgs> : IDisposableAction 
         where TArgs : struct
     {
