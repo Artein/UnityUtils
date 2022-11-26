@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace UnityUtils.Invocation
@@ -25,6 +26,16 @@ namespace UnityUtils.Invocation
                 _action.Invoke();
                 _action = null;
             }
+        }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            builder.Append($"{nameof(IsDisposed)}: ");
+            builder.Append(IsDisposed);
+            builder.Append($"; {nameof(_action)}: ");
+            builder.Append(IsDisposed ? "null" : $"{_action.Target}___{_action.Method}");
+            return builder.ToString();
         }
     }
     
