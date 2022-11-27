@@ -19,7 +19,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663299</MetadataToken>
+              <MetadataToken>100663341</MetadataToken>
               <Name>System.IDisposable UnityUtils.Invocation.DeferredInvocation.UnityUtils.Invocation.IDeferredInvocation::Lock()</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -32,7 +32,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663300</MetadataToken>
+              <MetadataToken>100663342</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DeferredInvocation::Cancel()</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -44,7 +44,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663301</MetadataToken>
+              <MetadataToken>100663343</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DeferredInvocation::Dispose()</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -56,7 +56,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663302</MetadataToken>
+              <MetadataToken>100663344</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DeferredInvocation::Unlock()</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -69,7 +69,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="3" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="3" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="7" visitedSequencePoints="7" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="3" minCyclomaticComplexity="3" maxCrapScore="3" minCrapScore="3" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663303</MetadataToken>
+              <MetadataToken>100663345</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DeferredInvocation::TryInvoke()</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -85,7 +85,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="5" visitedSequencePoints="5" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663297</MetadataToken>
+              <MetadataToken>100663339</MetadataToken>
               <Name>UnityUtils.Invocation.DeferredInvocation::DeferredInvocation(System.Action)</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -99,7 +99,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="5" visitedSequencePoints="5" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663298</MetadataToken>
+              <MetadataToken>100663340</MetadataToken>
               <Name>UnityUtils.Invocation.DeferredInvocation::DeferredInvocation(UnityUtils.Invocation.IDisposableAction)</Name>
               <FileRef uid="1" />
               <SequencePoints>
@@ -119,7 +119,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663305</MetadataToken>
+              <MetadataToken>100663347</MetadataToken>
               <Name>System.Boolean UnityUtils.Invocation.DisposableAction::get_IsDisposed()</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -129,7 +129,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="7" visitedSequencePoints="7" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663307</MetadataToken>
+              <MetadataToken>100663349</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DisposableAction.System.IDisposable::Dispose()</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -145,7 +145,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663306</MetadataToken>
+              <MetadataToken>100663348</MetadataToken>
               <Name>UnityUtils.Invocation.DisposableAction::DisposableAction(System.Action)</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -164,7 +164,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663308</MetadataToken>
+              <MetadataToken>100663350</MetadataToken>
               <Name>System.Boolean UnityUtils.Invocation.DisposableAction[TArgs]::get_IsDisposed()</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -174,7 +174,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="7" visitedSequencePoints="7" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663310</MetadataToken>
+              <MetadataToken>100663352</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.DisposableAction[TArgs].System.IDisposable::Dispose()</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -190,7 +190,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="5" visitedSequencePoints="5" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663309</MetadataToken>
+              <MetadataToken>100663351</MetadataToken>
               <Name>UnityUtils.Invocation.DisposableAction[TArgs]::DisposableAction(System.Action[TArgs], TArgs)</Name>
               <FileRef uid="2" />
               <SequencePoints>
@@ -210,7 +210,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="6" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663312</MetadataToken>
+              <MetadataToken>100663354</MetadataToken>
               <Name>System.IDisposable UnityUtils.Invocation.OrderedEvent::Subscribe(System.Int32, System.Action)</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -225,7 +225,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="10" visitedSequencePoints="10" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663313</MetadataToken>
+              <MetadataToken>100663355</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.OrderedEvent::Fire()</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -244,7 +244,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663314</MetadataToken>
+              <MetadataToken>100663356</MetadataToken>
               <Name>System.Void UnityUtils.Invocation.OrderedEvent::Remove(System.Collections.Generic.KeyValuePair[Int32,Action])</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -256,7 +256,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663315</MetadataToken>
+              <MetadataToken>100663357</MetadataToken>
               <Name>UnityUtils.Invocation.OrderedEvent::OrderedEvent()</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -272,7 +272,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="true" isGetter="false" isSetter="false">
               <Summary numSequencePoints="6" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663316</MetadataToken>
+              <MetadataToken>100663358</MetadataToken>
               <Name>static UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator UnityUtils.Enumeration.RangeEnumerationExtensions::GetEnumerator(System.Range)</Name>
               <FileRef uid="4" />
               <SequencePoints>
@@ -287,7 +287,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="true" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663317</MetadataToken>
+              <MetadataToken>100663359</MetadataToken>
               <Name>static UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator UnityUtils.Enumeration.RangeEnumerationExtensions::GetEnumerator(System.Int32)</Name>
               <FileRef uid="4" />
               <SequencePoints>
@@ -305,7 +305,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663318</MetadataToken>
+              <MetadataToken>100663384</MetadataToken>
               <Name>System.Int32 UnityUtils.Invocation.OrderedEvent/Comparator::Compare(System.Collections.Generic.KeyValuePair[Int32,Action], System.Collections.Generic.KeyValuePair[Int32,Action])</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -317,7 +317,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="true" isGetter="false" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663320</MetadataToken>
+              <MetadataToken>100663386</MetadataToken>
               <Name>static UnityUtils.Invocation.OrderedEvent/Comparator::Comparator()</Name>
               <FileRef uid="3" />
               <SequencePoints>
@@ -333,7 +333,7 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663324</MetadataToken>
+              <MetadataToken>100663390</MetadataToken>
               <Name>System.Int32 UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator::get_Current()</Name>
               <FileRef uid="4" />
               <SequencePoints>
@@ -343,7 +343,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663325</MetadataToken>
+              <MetadataToken>100663391</MetadataToken>
               <Name>System.Void UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator::set_Current(System.Int32)</Name>
               <FileRef uid="4" />
               <SequencePoints>
@@ -353,7 +353,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663326</MetadataToken>
+              <MetadataToken>100663392</MetadataToken>
               <Name>System.Boolean UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator::MoveNext()</Name>
               <FileRef uid="4" />
               <SequencePoints>
@@ -366,7 +366,7 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="3" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="3" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="5" visitedSequencePoints="5" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="3" minCyclomaticComplexity="3" maxCrapScore="3" minCrapScore="3" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663323</MetadataToken>
+              <MetadataToken>100663389</MetadataToken>
               <Name>UnityUtils.Enumeration.RangeEnumerationExtensions/IntEnumerator::IntEnumerator(System.Range)</Name>
               <FileRef uid="4" />
               <SequencePoints>
