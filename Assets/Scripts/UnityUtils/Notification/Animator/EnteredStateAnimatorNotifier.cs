@@ -3,7 +3,7 @@ using UnityEngine.TestTools;
 
 namespace UnityUtils.Notification.Animator
 {
-    [ExcludeFromCoverage] // don't include cause there no tests. No need to test Unity itself
+    [ExcludeFromCoverage] // no need to test Unity itself
     public class EnteredStateAnimatorNotifier : StateMachineBehaviour
     {
         public event EnteredEventHandler Entered;
