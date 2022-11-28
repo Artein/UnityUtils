@@ -36,14 +36,14 @@ namespace UnityUtils.Invocation.ReliableAction
 
             return false;
         }
-        
+
         public IDisposable LockInvocation()
         {
             _locksCount += 1;
             // TODO Optimization: DisposableActions can use pools
             return new DisposableAction(UnlockInvocation);
         }
-        
+
         public void Cancel()
         {
             IsCancelled = true;
@@ -53,14 +53,14 @@ namespace UnityUtils.Invocation.ReliableAction
         public abstract void Save(string saveKey);
         public abstract void Load(string saveKey);
         public abstract void DeleteSave(string saveKey);
-        
+
         protected virtual bool CanBeInvoked()
         {
             return !IsInvoked && !IsLocked && !IsCancelled;
         }
-        
+
         protected abstract void Invoke();
-        
+
         private void UnlockInvocation()
         {
             _locksCount -= 1;

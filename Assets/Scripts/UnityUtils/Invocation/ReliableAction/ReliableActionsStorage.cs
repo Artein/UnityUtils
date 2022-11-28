@@ -9,13 +9,15 @@ namespace UnityUtils.Invocation.ReliableAction
     public class ReliableActionsStorage : IReliableActionsStorage
     {
         private readonly List<IReliableAction> _actions = new();
-        
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
-        
+
+        public IReadOnlyList<IReliableAction> Actions => _actions;
+
         public void Add(IReliableAction action)
         {
             _actions.Add(action);
+
             PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
             SaveAction(action);
             PlayerPrefs.Save();
@@ -30,7 +32,7 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             throw new System.NotImplementedException();
         }
-        
+
         private void SaveAction([NotNull] IReliableAction action)
         {
             var actionIndex = _actions.IndexOf(action);
