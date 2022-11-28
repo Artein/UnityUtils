@@ -21,10 +21,12 @@ env:
 jobs:  
   runAllTests: # Job 1
     name: Run all tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
     strategy:
       fail-fast: false
+      matrix:
+        os: [ windows-2022, macos-12 ]
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
