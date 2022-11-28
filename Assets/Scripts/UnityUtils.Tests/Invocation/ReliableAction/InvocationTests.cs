@@ -4,9 +4,9 @@ using NSubstitute;
 using NUnit.Framework;
 using UnityUtils.Invocation.ReliableAction;
 
-namespace Invocation
+namespace Invocation.ReliableAction
 {
-    public class ReliableActionTests
+    public class InvocationTests
     {
         private int _methodCallsCount;
 
@@ -26,7 +26,19 @@ namespace Invocation
             _methodCallsCount.Should().Be(1);
         }
 
-        [Test] public void ReliableAction_IsInvokedProperty_ReturnsTrue_WhenSuccessfullyInvoked()
+        [Test] public void ReliableAction_DoInvoke_OnlyOnce()
+        {
+            var storage = Substitute.For<IReliableActionsStorage>();
+            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
+            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+
+            reliableAction.TryInvoke();
+            reliableAction.TryInvoke();
+
+            _methodCallsCount.Should().Be(1);
+        }
+
+        [Test] public void ReliableAction_IsInvokedProperty_ReturnsTrue_AfterSuccessfullyInvoked()
         {
             var storage = Substitute.For<IReliableActionsStorage>();
             var fallbackInvoker = Substitute.For<IFallbackInvoker>();
@@ -48,7 +60,7 @@ namespace Invocation
             isInvoked.Should().Be(true);
         }
 
-        [Test] public void ReliableAction_DoesNotInvokes_WhenCancelled()
+        [Test] public void ReliableAction_DoesNotInvokes_AfterCancellation()
         {
             var storage = Substitute.For<IReliableActionsStorage>();
             var fallbackInvoker = Substitute.For<IFallbackInvoker>();
@@ -59,7 +71,7 @@ namespace Invocation
 
             _methodCallsCount.Should().Be(0);
         }
-        
+
         [Test] public void ReliableAction_TryInvoke_ReturnsFalse_WhenInvocationCancelled()
         {
             var storage = Substitute.For<IReliableActionsStorage>();
@@ -72,16 +84,38 @@ namespace Invocation
             isInvoked.Should().Be(false);
         }
 
+        [Test] public void ReliableAction_IsCancelledProperty_ReturnsTrue_WhenInvocationCancelled()
+        {
+            var storage = Substitute.For<IReliableActionsStorage>();
+            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
+            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+
+            reliableAction.Cancel();
+
+            reliableAction.IsCancelled.Should().Be(true);
+        }
+
         [Test] public void ReliableAction_DoesNotInvokes_WithLockedInvocation()
         {
             var storage = Substitute.For<IReliableActionsStorage>();
             var fallbackInvoker = Substitute.For<IFallbackInvoker>();
             var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
 
-            var lockHandle = reliableAction.LockInvocation();
+            var _ = reliableAction.LockInvocation();
             reliableAction.TryInvoke();
 
             _methodCallsCount.Should().Be(0);
+        }
+
+        [Test] public void ReliableAction_IsLockedProperty_ReturnsTrue_WithLockedInvocation()
+        {
+            var storage = Substitute.For<IReliableActionsStorage>();
+            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
+            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+
+            var _ = reliableAction.LockInvocation();
+
+            reliableAction.IsLocked.Should().Be(true);
         }
 
         private void IncrementCallsCount() => _methodCallsCount++;
