@@ -102,7 +102,7 @@ jobs:
       - name: Deploy Unity version dynamic badge
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
-          auth: ${{ secrets.GIST_SECRET }}
+          auth: ${{ secrets.GIST_TOKEN }}
           gistID: 1512ec4843e8dfe5a9253b9b3f5e7c63
           filename: UnityUtils-main-dynamicbadge-unityversion.json
           label: Unity
