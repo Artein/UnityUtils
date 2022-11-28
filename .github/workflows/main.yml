@@ -18,7 +18,7 @@ env:
 # The idea is to get rid off duplicate action usage. Using anchors setup actions with versions once and then just use across workflow 
 #cache_action_declaration: &cache_action actions/cache@v3.0.11
 
-jobs:  
+jobs:
   runAllTests: # Job 1
     name: Run all tests
     runs-on: ${{ matrix.os }}
@@ -51,7 +51,7 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-          
+
       - name: Restore Library cache # Step 5
         uses: actions/cache@v3.0.11
         with:
@@ -60,7 +60,7 @@ jobs:
           restore-keys: |
             Library-run-tests
             Library-
-            
+
       - name: Checkout gh-pages branch into gh-pages directory # Step 6
         uses: actions/checkout@v3
         with:
@@ -69,10 +69,10 @@ jobs:
           submodules: true
           ref: gh-pages
           path: gh-pages
-          
+
       - name: Copy CodeCoverage directory to the root # Step 7. It will be updated with new results and create coverage history
         run: cp -R gh-pages/CodeCoverage .
-          
+
       - name: Run TestFramework # Step 8
         id: unity-test-runner
         uses: game-ci/unity-test-runner@v2.1.0
@@ -81,23 +81,24 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Test Results
           coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
-          
+
       - name: Zip CodeCoverage results # Step 9
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
-          
+
       - name: Upload TestFramework results # Step 10
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Test results
           path: ${{ steps.unity-test-runner.outputs.artifactsPath }}
-          
+
       - name: Upload CodeCoverage results # Step 11
         if: always()
         uses: actions/upload-artifact@v3.1.1
         with:
           name: CodeCoverage results
           path: CodeCoverage.zip
+
 
   deployCodeCoverageResults: # Job 2
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -113,15 +114,15 @@ jobs:
           clean: true
           submodules: true
           ref: gh-pages
-          
+
       - name: Download CodeCoverage results # Step 2
         uses: actions/download-artifact@v3.0.1
         with:
           name: CodeCoverage results
-          
+
       - name: Unzip CodeCoverage results # Step 3
         run: unzip -o CodeCoverage.zip
-        
+
       - name: Remove CodeCoverage.zip # Step 4
         run: rm CodeCoverage.zip
 
@@ -138,7 +139,7 @@ jobs:
           git add CodeCoverage
           git commit -m "[automated commit] Update CodeCoverage results following ${{ github.event.push.after }} commit after PR merge (invoked by ${{ github.workflow }} Action)"
           git push
-        
+
       - name: Deploy CodeCoverage SVG badge to Gist # Step 7
         uses: exuanbo/actions-deploy-gist@v1.1.4
         with:
