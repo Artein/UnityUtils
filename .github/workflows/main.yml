@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2022, macos-12 ]
+        os: [ ubuntu-20.04 ] # windows-2022, macos-12 — are not supported. Bug in game-ci/unity-test-runner (https://github.com/game-ci/unity-test-runner/issues/200)
     steps:
       - name: Checkout repository # Step 1
         uses: actions/checkout@v3
