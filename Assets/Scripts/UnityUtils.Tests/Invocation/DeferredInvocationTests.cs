@@ -43,7 +43,7 @@ namespace Invocation
         {
             int callsCount = 0;
             void SomeAction() => callsCount++;
-            void DIAdditionalLock(IDeferredInvocation di) { var _ = di.Lock(); }
+            void DIAdditionalLock(IDeferredInvocation di) { var _ = di.LockInvocation(); }
             
             using (var di = new DeferredInvocation(SomeAction))
             {
@@ -58,7 +58,7 @@ namespace Invocation
             int callsCount = 0;
             IDisposable additionalLockHandle;
             void SomeAction() => callsCount++;
-            void DIAdditionalLock(IDeferredInvocation di) => additionalLockHandle = di.Lock();
+            void DIAdditionalLock(IDeferredInvocation di) => additionalLockHandle = di.LockInvocation();
             void UnlockDIAdditionalLock() => additionalLockHandle.Dispose();
             
             using (var di = new DeferredInvocation(SomeAction))
@@ -86,7 +86,7 @@ namespace Invocation
             int callsCount = 0;
             IDisposable additionalLockHandle;
             void SomeAction() => callsCount++;
-            void DIAdditionalLock(IDeferredInvocation di) => additionalLockHandle = di.Lock();
+            void DIAdditionalLock(IDeferredInvocation di) => additionalLockHandle = di.LockInvocation();
             void UnlockDIAdditionalLock() => additionalLockHandle.Dispose();
             
             using (var di = new DeferredInvocation(SomeAction))

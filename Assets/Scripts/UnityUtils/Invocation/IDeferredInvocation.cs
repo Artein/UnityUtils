@@ -6,6 +6,6 @@ namespace UnityUtils.Invocation
     public interface IDeferredInvocation
     {
         [MustUseReturnValue("Dispose handle to continue invocation")]
-        IDisposable Lock();
+        IDisposable LockInvocation();
     }
 }
