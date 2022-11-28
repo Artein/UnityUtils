@@ -79,5 +79,32 @@ namespace UnityUtils.Extensions
         {
             PlayerPrefs.SetString(key, value.Ticks.ToString());
         }
+
+        public static bool TryGetGuid(string key, out Guid? value)
+        {
+            if (!PlayerPrefs.HasKey(key))
+            {
+                value = null;
+                return false;
+            }
+
+            var guidStr = PlayerPrefs.GetString(key);
+            if (!Guid.TryParseExact(guidStr, GuidFormat, out var parsedGuid))
+            {
+                Debug.LogError($"{nameof(PlayerPrefsExt.TryGetGuid)}: Could not parse loaded string ({guidStr})");
+                value = null;
+                return false;
+            }
+
+            value = parsedGuid;
+            return true;
+        }
+
+        public static void SetGuid(string key, Guid value)
+        {
+            PlayerPrefs.SetString(key, value.ToString(GuidFormat));
+        }
+
+        private const string GuidFormat = "N"; // using Number format as the shortest one
     }
 }
