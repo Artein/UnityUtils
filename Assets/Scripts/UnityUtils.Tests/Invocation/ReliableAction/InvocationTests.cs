@@ -9,17 +9,19 @@ namespace Invocation.ReliableAction
     public class InvocationTests
     {
         private int _methodCallsCount;
+        private IReliableActionsStorage _storage;
+        private IFallbackInvoker _fallbackInvoker;
 
         [SetUp] public void Setup()
         {
             _methodCallsCount = 0;
+            _storage = Substitute.For<IReliableActionsStorage>();
+            _fallbackInvoker = Substitute.For<IFallbackInvoker>();
         }
 
         [Test] public void ReliableAction_Invokes()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.TryInvoke();
 
@@ -28,9 +30,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_DoInvoke_OnlyOnce()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.TryInvoke();
             reliableAction.TryInvoke();
@@ -40,9 +40,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_IsInvokedProperty_ReturnsTrue_AfterSuccessfullyInvoked()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.TryInvoke();
 
@@ -51,9 +49,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_TryInvokeMethod_ReturnsTrue_WhenSuccessfullyInvoked()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             var isInvoked = reliableAction.TryInvoke();
 
@@ -62,9 +58,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_DoesNotInvokes_AfterCancellation()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.Cancel();
             reliableAction.TryInvoke();
@@ -74,9 +68,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_TryInvoke_ReturnsFalse_WhenInvocationCancelled()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.Cancel();
             var isInvoked = reliableAction.TryInvoke();
@@ -86,9 +78,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_IsCancelledProperty_ReturnsTrue_WhenInvocationCancelled()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             reliableAction.Cancel();
 
@@ -97,9 +87,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_DoesNotInvokes_WithLockedInvocation()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             var _ = reliableAction.LockInvocation();
             reliableAction.TryInvoke();
@@ -109,9 +97,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableAction_IsLockedProperty_ReturnsTrue_WithLockedInvocation()
         {
-            var storage = Substitute.For<IReliableActionsStorage>();
-            var fallbackInvoker = Substitute.For<IFallbackInvoker>();
-            var reliableAction = new TestReliableAction(IncrementCallsCount, storage, fallbackInvoker);
+            var reliableAction = new TestReliableAction(IncrementCallsCount, _storage, _fallbackInvoker);
 
             var _ = reliableAction.LockInvocation();
 
