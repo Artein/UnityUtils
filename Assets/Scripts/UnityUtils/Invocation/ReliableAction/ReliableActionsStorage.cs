@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -35,7 +36,7 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             Assert.IsTrue(_actions.Contains(action));
 
-            // TODO: Find better way instead of re-saving everything. Any IO is super slow
+            // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
             DeleteAllSaves();
             _actions.Remove(action);
             SaveAll();
@@ -72,9 +73,20 @@ namespace UnityUtils.Invocation.ReliableAction
             PlayerPrefs.Save();
         }
 
+        [MustUseReturnValue]
         public IList<IReliableAction> Take(IFallbackInvoker invoker)
         {
-            throw new System.NotImplementedException();
+            // TODO Performance: Get rid of LINQ and GC allocations
+            var result = _actions.Where(action => action.FallbackInvoker == invoker).ToList();
+            if (result.Count > 0)
+            {
+                // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
+                DeleteAllSaves();
+                _actions.RemoveAll(action => action.FallbackInvoker == invoker);
+                SaveAll();
+            }
+
+            return result;
         }
 
         private void SaveAction([NotNull] IReliableAction action)
