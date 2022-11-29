@@ -32,5 +32,13 @@ namespace Invocation.ReliableAction
 
             _storage.Actions.Should().BeEmpty();
         }
+
+        [Test] public void ReliableActionsStorage_ContainsNoReliableAction_AfterItWasCancelled()
+        {
+            var action = new TestsReliableAction(() => { }, _storage, _invoker);
+            action.Cancel();
+
+            _storage.Actions.Should().BeEmpty();
+        }
     }
 }
