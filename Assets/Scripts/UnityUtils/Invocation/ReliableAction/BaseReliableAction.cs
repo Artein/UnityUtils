@@ -9,16 +9,18 @@ namespace UnityUtils.Invocation.ReliableAction
         public bool IsInvoked { get; private set; }
         public bool IsLocked => _locksCount > 0;
         private readonly IReliableActionsStorage _storage;
+        private readonly bool _isFallbackInvocation;
         private int _locksCount;
 
         public abstract Guid TypeGuid { get; }
 
         protected BaseReliableAction(IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false)
         {
+            _isFallbackInvocation = isFallbackInvocation;
             FallbackInvoker = invoker;
             _storage = storage;
 
-            if (!isFallbackInvocation)
+            if (!_isFallbackInvocation)
             {
                 storage.Add(this);
             }
@@ -28,7 +30,11 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             if (CanBeInvoked())
             {
-                _storage.Remove(this);
+                if (!_isFallbackInvocation)
+                {
+                    _storage.Remove(this);
+                }
+                
                 Invoke();
                 IsInvoked = true;
                 return true;

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityUtils.Enumeration;
 using UnityUtils.Extensions;
 
 namespace UnityUtils.Invocation.ReliableAction
@@ -14,8 +16,14 @@ namespace UnityUtils.Invocation.ReliableAction
 
         public IReadOnlyList<IReliableAction> Actions => _actions;
 
+        public ReliableActionsStorage()
+        {
+            // TODO: Load actions from save
+        }
+
         public void Add(IReliableAction action)
         {
+            Assert.IsFalse(_actions.Contains(action));
             _actions.Add(action);
 
             PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
@@ -25,7 +33,43 @@ namespace UnityUtils.Invocation.ReliableAction
 
         public void Remove(IReliableAction action)
         {
-            throw new System.NotImplementedException();
+            Assert.IsTrue(_actions.Contains(action));
+
+            // TODO: Find better way instead of re-saving everything. Any IO is super slow
+            DeleteAllSaves();
+            _actions.Remove(action);
+            SaveAll();
+        }
+        
+        private void DeleteAllSaves()
+        {
+            PlayerPrefs.DeleteKey(CountSaveKey);
+            foreach (var idx in ..(_actions.Count - 1))
+            {
+                DeleteActionSave(idx);
+            }
+        }
+        
+        private void DeleteActionSave(int actionIndex)
+        {
+            Assert.IsTrue(actionIndex >= 0);
+            Assert.IsTrue(actionIndex < _actions.Count);
+            var guidSaveKey = GetActionSaveKey_Guid(actionIndex);
+            PlayerPrefs.DeleteKey(guidSaveKey);
+            var reliableAction = _actions[actionIndex];
+            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
+            reliableAction.DeleteSave(baseSaveKey);
+        }
+        
+        private void SaveAll()
+        {
+            PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                var action = _actions[i];
+                SaveAction(i, action);
+            }
+            PlayerPrefs.Save();
         }
 
         public IList<IReliableAction> Take(IFallbackInvoker invoker)
@@ -41,6 +85,11 @@ namespace UnityUtils.Invocation.ReliableAction
                 throw new InvalidOperationException($"Could not find `{action.GetType().Name}` reliable action at index: {actionIndex}");
             }
 
+            SaveAction(actionIndex, action);
+        }
+
+        private void SaveAction(int actionIndex, [NotNull] IReliableAction action)
+        {
             var actionTypeSaveId = action.TypeGuid;
             var actionTypeSaveKey = GetActionSaveKey_Guid(actionIndex);
             PlayerPrefsExt.SetGuid(actionTypeSaveKey, actionTypeSaveId);
@@ -48,6 +97,7 @@ namespace UnityUtils.Invocation.ReliableAction
             action.Save(GetActionSaveKey_Base(actionIndex));
         }
 
+        // TODO GC: Create pool based on action index
         private static string GetActionSaveKey_Base(int actionIndex) => $"{BaseSaveKey}_Action_{actionIndex}";
         private static string GetActionSaveKey_Guid(int actionIndex) => $"{GetActionSaveKey_Base(actionIndex)}_Guid";
     }

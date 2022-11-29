@@ -19,8 +19,15 @@ namespace Invocation.ReliableAction
             // nothing to save
         }
 
-        public override void Load(string saveKey) => throw new NotImplementedException();
-        public override void DeleteSave(string saveKey) => throw new NotImplementedException();
+        public override void Load(string saveKey)
+        {
+            // nothing to do
+        }
+
+        public override void DeleteSave(string saveKey)
+        {
+            // nothing to do
+        }
 
         protected override void Invoke()
         {
