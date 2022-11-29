@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -74,19 +75,6 @@ namespace Invocation.ReliableAction
                 .And.Contain(action2)
                 .And.NotContain(action)
                 .And.NotContain(action3);
-        }
-
-        [Test] public void ReliableActionsStorage_TakeMethod_DoesNotAllocateGC()
-        {
-            var invoker2 = Substitute.For<IFallbackInvoker>();
-            var _ = new TestsReliableAction(() => { }, _storage, _invoker);
-            var __ = new TestsReliableAction(() => { }, _storage, invoker2);
-            var ___ = new TestsReliableAction(() => { }, _storage, _invoker);
-
-            Assert.That(() =>
-            {
-                var ____ = _storage.Take(_invoker);
-            }, Is.Not.AllocatingGCMemory());
         }
 
         [Test] public void ReliableActionStorage_OnCreation_LoadsAllSavedActions()

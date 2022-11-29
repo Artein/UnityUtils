@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -76,17 +75,29 @@ namespace UnityUtils.Invocation.ReliableAction
         [MustUseReturnValue]
         public IList<IReliableAction> Take(IFallbackInvoker invoker)
         {
-            // TODO Performance: Get rid of LINQ and GC allocations
-            var result = _actions.Where(action => action.FallbackInvoker == invoker).ToList();
-            if (result.Count > 0)
+            var takenActions = new List<IReliableAction>();
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                var action = _actions[i];
+                if (ReferenceEquals(action.FallbackInvoker, invoker))
+                {
+                    takenActions.Add(action);
+                }
+            }
+            
+            if (takenActions.Count > 0)
             {
                 // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
                 DeleteAllSaves();
-                _actions.RemoveAll(action => action.FallbackInvoker == invoker);
+                for (int i = 0; i < takenActions.Count; i++)
+                {
+                    var takenAction = takenActions[i];
+                    _actions.Remove(takenAction);
+                }
                 SaveAll();
             }
 
-            return result;
+            return takenActions;
         }
 
         private void SaveAction([NotNull] IReliableAction action)
