@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -27,7 +26,7 @@ namespace UnityUtils.Invocation.ReliableAction
             _actions.Add(action);
 
             PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
-            SaveAction(action);
+            SaveAction(_actions.Count - 1, action);
             PlayerPrefs.Save();
         }
 
@@ -39,37 +38,6 @@ namespace UnityUtils.Invocation.ReliableAction
             DeleteAllSaves();
             _actions.Remove(action);
             SaveAll();
-        }
-        
-        private void DeleteAllSaves()
-        {
-            PlayerPrefs.DeleteKey(CountSaveKey);
-            foreach (var idx in ..(_actions.Count - 1))
-            {
-                DeleteActionSave(idx);
-            }
-        }
-        
-        private void DeleteActionSave(int actionIndex)
-        {
-            Assert.IsTrue(actionIndex >= 0);
-            Assert.IsTrue(actionIndex < _actions.Count);
-            var guidSaveKey = GetActionSaveKey_Guid(actionIndex);
-            PlayerPrefs.DeleteKey(guidSaveKey);
-            var reliableAction = _actions[actionIndex];
-            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
-            reliableAction.DeleteSave(baseSaveKey);
-        }
-        
-        private void SaveAll()
-        {
-            PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
-            for (int i = 0; i < _actions.Count; i++)
-            {
-                var action = _actions[i];
-                SaveAction(i, action);
-            }
-            PlayerPrefs.Save();
         }
 
         [MustUseReturnValue]
@@ -100,24 +68,44 @@ namespace UnityUtils.Invocation.ReliableAction
             return takenActions;
         }
 
-        private void SaveAction([NotNull] IReliableAction action)
+        private void DeleteAllSaves()
         {
-            var actionIndex = _actions.IndexOf(action);
-            if (actionIndex < 0)
+            PlayerPrefs.DeleteKey(CountSaveKey);
+            foreach (var idx in ..(_actions.Count - 1))
             {
-                throw new InvalidOperationException($"Could not find `{action.GetType().Name}` reliable action at index: {actionIndex}");
+                DeleteActionSave(idx);
             }
+        }
 
-            SaveAction(actionIndex, action);
+        private void DeleteActionSave(int actionIndex)
+        {
+            Assert.IsTrue(actionIndex >= 0);
+            Assert.IsTrue(actionIndex < _actions.Count);
+            var guidSaveKey = GetActionSaveKey_Guid(actionIndex);
+            PlayerPrefs.DeleteKey(guidSaveKey);
+            var reliableAction = _actions[actionIndex];
+            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
+            reliableAction.DeleteSave(baseSaveKey);
+        }
+
+        private void SaveAll()
+        {
+            PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                var action = _actions[i];
+                SaveAction(i, action);
+            }
+            PlayerPrefs.Save();
         }
 
         private void SaveAction(int actionIndex, [NotNull] IReliableAction action)
         {
-            var actionTypeSaveId = action.TypeGuid;
-            var actionTypeSaveKey = GetActionSaveKey_Guid(actionIndex);
-            PlayerPrefsExt.SetGuid(actionTypeSaveKey, actionTypeSaveId);
+            var typeGuidSaveKey = GetActionSaveKey_Guid(actionIndex);
+            PlayerPrefsExt.SetGuid(typeGuidSaveKey, action.TypeGuid);
 
-            action.Save(GetActionSaveKey_Base(actionIndex));
+            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
+            action.Save(baseSaveKey);
         }
 
         // TODO GC: Create pool based on action index
