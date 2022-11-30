@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools.Constraints;
 using UnityUtils.Invocation.ReliableAction;
-using Is = NUnit.Framework.Is;
 
 namespace Invocation.ReliableAction
 {
+    [TestFixture]
     public class StorageTests
     {
         private ReliableActionsStorage _storage;

@@ -5,6 +5,7 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
+    [TestFixture]
     public class InvocationTests
     {
         private int _methodCallsCount;
