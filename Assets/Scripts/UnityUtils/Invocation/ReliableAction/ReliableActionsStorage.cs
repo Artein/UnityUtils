@@ -11,80 +11,77 @@ namespace UnityUtils.Invocation.ReliableAction
     // TODO Reformat: Extract saving/loading feature into separate interfaces (PlayerPrefs not the only option)
     public class ReliableActionsStorage : IReliableActionsStorage
     {
-        private readonly List<IReliableAction> _actions;
-        private readonly List<Guid> _actionTypeGuids;
-        private readonly IReliableActionsSaveMapper _saveMapper;
+        private readonly List<IReliableAction> _newActions = new();
+        private readonly List<int> _newActionIndicesInFallbackGuids = new();
+        private readonly List<Guid> _fallbackActionGuids;
         private readonly IReliableActionInstantiator _instantiator;
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
 
-        public IReadOnlyList<IReliableAction> Actions => _actions;
+        public IReadOnlyList<IReliableAction> NewActions => _newActions;
 
-        public ReliableActionsStorage(IReliableActionsSaveMapper saveMapper, IReliableActionInstantiator instantiator)
+        public ReliableActionsStorage(IReliableActionInstantiator instantiator)
         {
             _instantiator = instantiator;
-            _saveMapper = saveMapper;
 
-            LoadAllActionGuids(out _actionTypeGuids);
-            _actions = new List<IReliableAction>(_actionTypeGuids.Count);
+            LoadAllActionGuids(out _fallbackActionGuids);
         }
 
         public void Add(IReliableAction action)
         {
-            Assert.IsFalse(_actions.Contains(action));
-            _actions.Add(action);
+            var newActionIndex = AddNewAction(action);
 
-            PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
-            SaveAction(_actions.Count - 1, action);
+            PlayerPrefs.SetInt(CountSaveKey, _newActions.Count);
+            SaveAction(newActionIndex, action);
             PlayerPrefs.Save();
         }
 
-        public void Remove(IReliableAction action)
+        public bool Remove(IReliableAction action)
         {
-            var index = _actions.IndexOf(action);
-            Assert.IsTrue(index >= 0);
+            var index = _newActions.IndexOf(action);
+            if (index == -1)
+            {
+                return false;
+            }
 
             // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
             DeleteAllSaves();
             {
-                _actions.RemoveAt(index);
+                RemoveNewActionAt(index);
             }
             SaveAll();
+            return true;
         }
 
-        [MustUseReturnValue, CanBeNull]
         public IList<IReliableAction> Take(IFallbackInvoker invoker)
         {
-            // TODO: Create actions from _actionTypeGuids here
-            // TODO: FallbackInvoker might provide Guid-Types that it handles
-            
-            int actionsToTake = 0;
-            for (int i = 0; i < _actions.Count; i += 1)
-            {
-                var action = _actions[i];
-                if (ReferenceEquals(action.FallbackInvoker, invoker))
-                {
-                    actionsToTake += 1;
-                }
-            }
-
-            if (actionsToTake == 0)
-            {
-                return null;
-            }
-
-            var takenActions = new List<IReliableAction>(actionsToTake);
+            var takenActions = new List<IReliableAction>();
             
             // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
             DeleteAllSaves();
             {
-                for (int i = _actions.Count - 1; i >= 0; i -= 1)
+                // 1. Add newly added actions first
+                for (int i = _newActions.Count - 1; i >= 0; i -= 1)
                 {
-                    var action = _actions[i];
+                    var action = _newActions[i];
                     if (ReferenceEquals(action.FallbackInvoker, invoker))
                     {
                         takenActions.Add(action);
-                        _actions.RemoveAt(i);
+                        RemoveNewActionAt(i);
+                    }
+                }
+                
+                // 2. Find actions supported by invoker via comparing type-guids
+                for (int i = _fallbackActionGuids.Count - 1; i >= 0 ; i -= 1)
+                {
+                    var typeGuid = _fallbackActionGuids[i];
+                    if (invoker.SupportedActionTypes.TryGetValue(typeGuid, out var actionType))
+                    {
+                        var action = _instantiator.Instantiate(actionType);
+                        var baseSaveKey = GetActionSaveKey_Base(i);
+                        action.Load(baseSaveKey);
+                        takenActions.Add(action);
+                        _fallbackActionGuids.RemoveAt(i);
                     }
                 }
             }
@@ -92,21 +89,30 @@ namespace UnityUtils.Invocation.ReliableAction
             
             return takenActions;
         }
-        
-        private IReliableAction CreateAction(int actionIndex)
+
+        /// <returns> Index in fallback actions </returns>
+        private int AddNewAction(IReliableAction action)
         {
-            var typeGuid = _actionTypeGuids[actionIndex];
-            var actionType = _saveMapper.FindType(typeGuid);
-            var action = _instantiator.Instantiate(actionType);
-            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
-            action.Load(baseSaveKey);
-            return action;
+            Assert.IsFalse(_newActions.Contains(action));
+            _newActions.Add(action);
+            var newActionIndex = _fallbackActionGuids.Count;
+            _fallbackActionGuids.Add(action.TypeGuid);
+            _newActionIndicesInFallbackGuids.Add(newActionIndex);
+            return newActionIndex;
+        }
+
+        private void RemoveNewActionAt(int index)
+        {
+            _newActions.RemoveAt(index);
+            var fallbackIndex = _newActionIndicesInFallbackGuids[index];
+            _newActionIndicesInFallbackGuids.RemoveAt(index);
+            _fallbackActionGuids.RemoveAt(fallbackIndex);
         }
 
         private void DeleteAllSaves()
         {
             PlayerPrefs.DeleteKey(CountSaveKey);
-            foreach (var idx in ..(_actions.Count - 1))
+            foreach (var idx in ..(_newActions.Count - 1))
             {
                 DeleteActionSave(idx);
             }
@@ -115,31 +121,32 @@ namespace UnityUtils.Invocation.ReliableAction
         private void DeleteActionSave(int actionIndex)
         {
             Assert.IsTrue(actionIndex >= 0);
-            Assert.IsTrue(actionIndex < _actions.Count);
+            Assert.IsTrue(actionIndex < _newActions.Count);
             var guidSaveKey = GetActionSaveKey_Guid(actionIndex);
             PlayerPrefs.DeleteKey(guidSaveKey);
-            var reliableAction = _actions[actionIndex];
+            var reliableAction = _newActions[actionIndex];
             var baseSaveKey = GetActionSaveKey_Base(actionIndex);
             reliableAction.DeleteSave(baseSaveKey);
         }
 
         private void SaveAll()
         {
-            PlayerPrefs.SetInt(CountSaveKey, _actions.Count);
-            for (int i = 0; i < _actions.Count; i++)
+            PlayerPrefs.SetInt(CountSaveKey, _newActions.Count);
+            for (int i = 0; i < _newActions.Count; i++)
             {
-                var action = _actions[i];
-                SaveAction(i, action);
+                var action = _newActions[i];
+                var fallbackIndex = _newActionIndicesInFallbackGuids[i];
+                SaveAction(fallbackIndex, action);
             }
             PlayerPrefs.Save();
         }
 
-        private static void SaveAction(int actionIndex, [NotNull] IReliableAction action)
+        private static void SaveAction(int index, [NotNull] IReliableAction action)
         {
-            var typeGuidSaveKey = GetActionSaveKey_Guid(actionIndex);
+            var typeGuidSaveKey = GetActionSaveKey_Guid(index);
             PlayerPrefsExt.SetGuid(typeGuidSaveKey, action.TypeGuid);
 
-            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
+            var baseSaveKey = GetActionSaveKey_Base(index);
             action.Save(baseSaveKey);
         }
 
@@ -154,20 +161,20 @@ namespace UnityUtils.Invocation.ReliableAction
             }
         }
 
-        private static Guid LoadActionGuid(int actionIdx)
+        private static Guid LoadActionGuid(int index)
         {
-            var guidSaveKey = GetActionSaveKey_Guid(actionIdx);
+            var guidSaveKey = GetActionSaveKey_Guid(index);
             if (PlayerPrefsExt.TryGetGuid(guidSaveKey, out var typeGuid))
             {
                 Assert.IsTrue(typeGuid.HasValue);
                 return typeGuid.Value;
             }
             
-            throw new Exception($"Could not load action by type-guid:{guidSaveKey} at index:{actionIdx}");
+            throw new Exception($"Could not load action by type-guid:{guidSaveKey} at index:{index}");
         }
 
         // TODO GC: Create pool based on action index
-        private static string GetActionSaveKey_Base(int actionIndex) => $"{BaseSaveKey}_Action_{actionIndex}";
-        private static string GetActionSaveKey_Guid(int actionIndex) => $"{GetActionSaveKey_Base(actionIndex)}_Guid";
+        private static string GetActionSaveKey_Base(int index) => $"{BaseSaveKey}_Action_{index}";
+        private static string GetActionSaveKey_Guid(int index) => $"{GetActionSaveKey_Base(index)}_TypeGuid";
     }
 }

@@ -12,23 +12,24 @@ namespace Invocation.ReliableAction
     {
         private ReliableActionsStorage _storage;
         private IFallbackInvoker _invoker;
-        private TestsReliableActionsSaveMapper _saveMapper;
-        private TestsReliableActionInstantiator _instantiator;
+        private readonly TestsReliableActionInstantiator _instantiator = new(); // has no caches
 
-        [SetUp] public void Setup()
+        [SetUp] public void OnSetUp()
         {
-            _saveMapper = new TestsReliableActionsSaveMapper();
-            _instantiator = new TestsReliableActionInstantiator();
-            _storage = new ReliableActionsStorage(_saveMapper, _instantiator);
+            _storage = new ReliableActionsStorage(_instantiator);
             _invoker = Substitute.For<IFallbackInvoker>();
-            PlayerPrefs.DeleteAll(); // TODO: Delete everything related to ReliableActionsStorage
+        }
+
+        [TearDown] public void OnTearDown()
+        {
+            PlayerPrefs.DeleteAll(); // TODO: Delete everything related ONLY to ReliableActionsStorage
         }
         
         [Test] public void ReliableActionsStorage_ContainsReliableAction_AfterItWasCreated()
         {
             var action = new TestsReliableAction(() => { }, _storage, _invoker);
 
-            _storage.Actions.Should().ContainSingle(a => a.Equals(action));
+            _storage.NewActions.Should().ContainSingle(a => a.Equals(action));
         }
 
         [Test] public void ReliableActionsStorage_ContainsNoReliableAction_AfterItWasInvoked()
@@ -36,7 +37,7 @@ namespace Invocation.ReliableAction
             var action = new TestsReliableAction(() => { }, _storage, _invoker);
             action.TryInvoke();
 
-            _storage.Actions.Should().BeEmpty();
+            _storage.NewActions.Should().BeEmpty();
         }
 
         [Test] public void ReliableActionsStorage_ContainsNoReliableAction_AfterItWasCancelled()
@@ -44,7 +45,7 @@ namespace Invocation.ReliableAction
             var action = new TestsReliableAction(() => { }, _storage, _invoker);
             action.Cancel();
 
-            _storage.Actions.Should().BeEmpty();
+            _storage.NewActions.Should().BeEmpty();
         }
 
         [Test] public void ReliableActionsStorage_TakeMethod_ReturnsAllActions_WithPassedFallbackInvoker()
@@ -72,7 +73,7 @@ namespace Invocation.ReliableAction
 
             var _ = _storage.Take(_invoker);
 
-            _storage.Actions.Should().NotBeEmpty()
+            _storage.NewActions.Should().NotBeEmpty()
                 .And.HaveCount(1)
                 .And.Contain(action2)
                 .And.NotContain(action)
