@@ -11,8 +11,9 @@ namespace Invocation.ReliableAction
             _action = action;
         }
 
+        public static readonly Guid StaticTypeGuid = new("C3B7E643-9358-4FCF-9337-9BA6403F1F11");
         private readonly Action _action;
-        public override Guid TypeGuid => new("C3B7E643-9358-4FCF-9337-9BA6403F1F11");
+        public override Guid TypeGuid => StaticTypeGuid;
 
         public override void Save(string saveKey)
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -7,17 +8,25 @@ using UnityUtils.Extensions;
 
 namespace UnityUtils.Invocation.ReliableAction
 {
+    // TODO Reformat: Extract saving/loading feature into separate interfaces (PlayerPrefs not the only option)
     public class ReliableActionsStorage : IReliableActionsStorage
     {
-        private readonly List<IReliableAction> _actions = new();
+        private readonly List<IReliableAction> _actions;
+        private readonly List<Guid> _actionTypeGuids;
+        private readonly IReliableActionsSaveMapper _saveMapper;
+        private readonly IReliableActionInstantiator _instantiator;
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
 
         public IReadOnlyList<IReliableAction> Actions => _actions;
 
-        public ReliableActionsStorage()
+        public ReliableActionsStorage(IReliableActionsSaveMapper saveMapper, IReliableActionInstantiator instantiator)
         {
-            // TODO: Load actions from save
+            _instantiator = instantiator;
+            _saveMapper = saveMapper;
+
+            LoadAllActionGuids(out _actionTypeGuids);
+            _actions = new List<IReliableAction>(_actionTypeGuids.Count);
         }
 
         public void Add(IReliableAction action)
@@ -32,40 +41,66 @@ namespace UnityUtils.Invocation.ReliableAction
 
         public void Remove(IReliableAction action)
         {
-            Assert.IsTrue(_actions.Contains(action));
+            var index = _actions.IndexOf(action);
+            Assert.IsTrue(index >= 0);
 
             // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
             DeleteAllSaves();
-            _actions.Remove(action);
+            {
+                _actions.RemoveAt(index);
+            }
             SaveAll();
         }
 
-        [MustUseReturnValue]
+        [MustUseReturnValue, CanBeNull]
         public IList<IReliableAction> Take(IFallbackInvoker invoker)
         {
-            var takenActions = new List<IReliableAction>();
-            for (int i = 0; i < _actions.Count; i++)
+            // TODO: Create actions from _actionTypeGuids here
+            // TODO: FallbackInvoker might provide Guid-Types that it handles
+            
+            int actionsToTake = 0;
+            for (int i = 0; i < _actions.Count; i += 1)
             {
                 var action = _actions[i];
                 if (ReferenceEquals(action.FallbackInvoker, invoker))
                 {
-                    takenActions.Add(action);
+                    actionsToTake += 1;
                 }
-            }
-            
-            if (takenActions.Count > 0)
-            {
-                // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
-                DeleteAllSaves();
-                for (int i = 0; i < takenActions.Count; i++)
-                {
-                    var takenAction = takenActions[i];
-                    _actions.Remove(takenAction);
-                }
-                SaveAll();
             }
 
+            if (actionsToTake == 0)
+            {
+                return null;
+            }
+
+            var takenActions = new List<IReliableAction>(actionsToTake);
+            
+            // TODO Performance: Find better way instead of re-saving everything. Any IO is super slow
+            DeleteAllSaves();
+            {
+                for (int i = _actions.Count - 1; i >= 0; i -= 1)
+                {
+                    var action = _actions[i];
+                    if (ReferenceEquals(action.FallbackInvoker, invoker))
+                    {
+                        takenActions.Add(action);
+                        _actions.RemoveAt(i);
+                    }
+                }
+            }
+            SaveAll();
+            
             return takenActions;
+        }
+        
+        private IReliableAction CreateAction(int actionIndex)
+        {
+            var typeGuid = _actionTypeGuids[actionIndex];
+            var actionType = _saveMapper.FindType(typeGuid);
+            var action = _instantiator.Instantiate(actionType);
+            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
+            action.Load(baseSaveKey);
+            return action;
         }
 
         private void DeleteAllSaves()
@@ -99,13 +134,36 @@ namespace UnityUtils.Invocation.ReliableAction
             PlayerPrefs.Save();
         }
 
-        private void SaveAction(int actionIndex, [NotNull] IReliableAction action)
+        private static void SaveAction(int actionIndex, [NotNull] IReliableAction action)
         {
             var typeGuidSaveKey = GetActionSaveKey_Guid(actionIndex);
             PlayerPrefsExt.SetGuid(typeGuidSaveKey, action.TypeGuid);
 
             var baseSaveKey = GetActionSaveKey_Base(actionIndex);
             action.Save(baseSaveKey);
+        }
+
+        private static void LoadAllActionGuids(out List<Guid> list)
+        {
+            var actionsCount = PlayerPrefs.GetInt(CountSaveKey, defaultValue: 0);
+            list = new List<Guid>(actionsCount);
+            for (var i = 0; i < actionsCount; i += 1)
+            {
+                var action = LoadActionGuid(i);
+                list.Add(action);
+            }
+        }
+
+        private static Guid LoadActionGuid(int actionIdx)
+        {
+            var guidSaveKey = GetActionSaveKey_Guid(actionIdx);
+            if (PlayerPrefsExt.TryGetGuid(guidSaveKey, out var typeGuid))
+            {
+                Assert.IsTrue(typeGuid.HasValue);
+                return typeGuid.Value;
+            }
+            
+            throw new Exception($"Could not load action by type-guid:{guidSaveKey} at index:{actionIdx}");
         }
 
         // TODO GC: Create pool based on action index

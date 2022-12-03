@@ -12,10 +12,14 @@ namespace Invocation.ReliableAction
     {
         private ReliableActionsStorage _storage;
         private IFallbackInvoker _invoker;
+        private TestsReliableActionsSaveMapper _saveMapper;
+        private TestsReliableActionInstantiator _instantiator;
 
         [SetUp] public void Setup()
         {
-            _storage = new ReliableActionsStorage();
+            _saveMapper = new TestsReliableActionsSaveMapper();
+            _instantiator = new TestsReliableActionInstantiator();
+            _storage = new ReliableActionsStorage(_saveMapper, _instantiator);
             _invoker = Substitute.For<IFallbackInvoker>();
             PlayerPrefs.DeleteAll(); // TODO: Delete everything related to ReliableActionsStorage
         }
