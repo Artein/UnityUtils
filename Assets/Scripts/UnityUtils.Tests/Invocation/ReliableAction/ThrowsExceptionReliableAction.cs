@@ -3,9 +3,10 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    public class ThrowsExceptionReliableAction : BaseReliableAction
+    internal sealed class ThrowsExceptionReliableAction : BaseReliableAction<EmptyArguments>
     {
-        public ThrowsExceptionReliableAction(IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) : base(storage, invoker, isFallbackInvocation)
+        public ThrowsExceptionReliableAction(IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
+            : base(storage, invoker, isFallbackInvocation)
         {
         }
 

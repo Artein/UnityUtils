@@ -4,39 +4,52 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    internal class TestsModel_IncrementCounter_ReliableAction : BaseReliableAction
+    internal sealed class TestsModel_IncrementCounter_ReliableAction : BaseReliableAction<TestsModel_IncrementCounter_ReliableAction.Args>
     {
-        public TestsModel_IncrementCounter_ReliableAction(TestsModel testsModel, IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
-            : base(storage, invoker, isFallbackInvocation)
+        public TestsModel_IncrementCounter_ReliableAction(TestsModel testsModel, IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false, int incrementValue = DefaultIncrementValue) 
+            : base(storage, invoker, isFallbackInvocation, new Args { IncrementValue = incrementValue })
         {
             _testsModel = testsModel;
         }
 
+        private const int DefaultIncrementValue = 1;
         public static readonly Guid StaticTypeGuid = new("C3B7E643-9358-4FCF-9337-9BA6403F1F11");
         public override Guid TypeGuid => StaticTypeGuid;
-        public int CustomSavableInteger { get; private set; }
         private readonly TestsModel _testsModel;
+        public int IncrementValue { get; set; }
 
         public override void Save(string saveKey)
         {
-            PlayerPrefs.SetInt(GetCustomSavableIntegerSaveId(saveKey), CustomSavableInteger);
+            PlayerPrefs.SetInt(GetIncrementValueSaveId(saveKey), IncrementValue);
         }
 
         public override void Load(string saveKey)
         {
-            CustomSavableInteger = PlayerPrefs.GetInt(GetCustomSavableIntegerSaveId(saveKey));
+            IncrementValue = PlayerPrefs.GetInt(GetIncrementValueSaveId(saveKey), DefaultIncrementValue);
         }
 
         public override void DeleteSave(string saveKey)
         {
-            PlayerPrefs.DeleteKey(GetCustomSavableIntegerSaveId(saveKey));
+            PlayerPrefs.DeleteKey(GetIncrementValueSaveId(saveKey));
+        }
+
+        protected override void OnConstructing(Args args)
+        {
+            base.OnConstructing(args);
+            
+            IncrementValue = args.IncrementValue;
         }
 
         protected override void Invoke()
         {
-            _testsModel.Count += 1;
+            _testsModel.Count += IncrementValue;
         }
 
-        private static string GetCustomSavableIntegerSaveId(string saveKey) => $"{saveKey}_{nameof(CustomSavableInteger)}";
+        private static string GetIncrementValueSaveId(string saveKey) => $"{saveKey}_{nameof(IncrementValue)}";
+        
+        public struct Args
+        {
+            public int IncrementValue;
+        }
     }
 }
