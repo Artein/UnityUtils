@@ -24,7 +24,7 @@ namespace Invocation.ReliableAction
                 var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator);
                 var _ = new TestsModel_IncrementCounter_ReliableAction(testsModel, storage, fallbackInvoker);
                 
-                GC.Collect();
+                GC.Collect(0);
             }
             
             { // Consecutive "app run"
@@ -49,7 +49,7 @@ namespace Invocation.ReliableAction
                 var _ = new TestsModel_IncrementCounter_ReliableAction(testsModel, storage, fallbackInvoker, incrementValue: 2);
                 var __ = new TestsModel_IncrementCounter_ReliableAction(testsModel, storage, fallbackInvoker, incrementValue: 3);
                 
-                GC.Collect();
+                GC.Collect(0);
             }
             
             { // Consecutive "app run"
@@ -81,7 +81,7 @@ namespace Invocation.ReliableAction
                 var _ = new TestsModel_IncrementCounter_ReliableAction(testsModel, storage, fallbackInvoker);
                 var __ = new ThrowsExceptionReliableAction(storage, fallbackInvoker);
                 
-                GC.Collect();
+                GC.Collect(0);
             }
 
             { // Consecutive "app run"
