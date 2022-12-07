@@ -3,16 +3,16 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    internal class TestsReliableAction : BaseReliableAction
+    internal class TestsModel_IncrementCounter_ReliableAction : BaseReliableAction
     {
-        public TestsReliableAction(Action action, IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
+        public TestsModel_IncrementCounter_ReliableAction(TestsModel testsModel, IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
             : base(storage, invoker, isFallbackInvocation)
         {
-            _action = action;
+            _testsModel = testsModel;
         }
 
         public static readonly Guid StaticTypeGuid = new("C3B7E643-9358-4FCF-9337-9BA6403F1F11");
-        private readonly Action _action;
+        private readonly TestsModel _testsModel;
         public override Guid TypeGuid => StaticTypeGuid;
 
         public override void Save(string saveKey)
@@ -32,7 +32,7 @@ namespace Invocation.ReliableAction
 
         protected override void Invoke()
         {
-            _action.Invoke();
+            _testsModel.Count += 1;
         }
     }
 }

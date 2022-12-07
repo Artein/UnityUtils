@@ -12,10 +12,10 @@ namespace Invocation.ReliableAction
 
         protected override Dictionary<Guid, Type> SupportedActionTypesDic { get; } = new()
         {
-            { TestsReliableAction.StaticTypeGuid, typeof(TestsReliableAction) },
+            { TestsModel_IncrementCounter_ReliableAction.StaticTypeGuid, typeof(TestsModel_IncrementCounter_ReliableAction) },
         };
 
-        // public to be invoked from tests
+        // made public to be invoked from tests
         public new void Invoke() => base.Invoke();
     }
 }

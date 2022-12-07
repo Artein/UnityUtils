@@ -12,12 +12,14 @@ namespace Invocation.ReliableAction
     {
         private ReliableActionsStorage _storage;
         private IFallbackInvoker _invoker;
+        private TestsModel _testsModel;
         private readonly TestsReliableActionInstantiator _instantiator = new(); // has no caches
 
         [SetUp] public void OnSetUp()
         {
             _storage = new ReliableActionsStorage(_instantiator);
             _invoker = Substitute.For<IFallbackInvoker>();
+            _testsModel = new TestsModel();
         }
 
         [TearDown] public void OnTearDown()
@@ -27,14 +29,14 @@ namespace Invocation.ReliableAction
         
         [Test] public void ReliableActionsStorage_ContainsReliableAction_AfterItWasCreated()
         {
-            var action = new TestsReliableAction(() => { }, _storage, _invoker);
+            var reliableAction = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
 
-            _storage.NewActions.Should().ContainSingle(a => a.Equals(action));
+            _storage.NewActions.Should().ContainSingle(a => a.Equals(reliableAction));
         }
 
         [Test] public void ReliableActionsStorage_ContainsNoReliableAction_AfterItWasInvoked()
         {
-            var action = new TestsReliableAction(() => { }, _storage, _invoker);
+            var action = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
             action.TryInvoke();
 
             _storage.NewActions.Should().BeEmpty();
@@ -42,7 +44,7 @@ namespace Invocation.ReliableAction
 
         [Test] public void ReliableActionsStorage_ContainsNoReliableAction_AfterItWasCancelled()
         {
-            var action = new TestsReliableAction(() => { }, _storage, _invoker);
+            var action = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
             action.Cancel();
 
             _storage.NewActions.Should().BeEmpty();
@@ -51,9 +53,9 @@ namespace Invocation.ReliableAction
         [Test] public void ReliableActionsStorage_TakeMethod_ReturnsAllActions_WithPassedFallbackInvoker()
         {
             var invoker2 = Substitute.For<IFallbackInvoker>();
-            var action = new TestsReliableAction(() => { }, _storage, _invoker);
-            var action2 = new TestsReliableAction(() => { }, _storage, invoker2);
-            var action3 = new TestsReliableAction(() => { }, _storage, _invoker);
+            var action = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
+            var action2 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, invoker2);
+            var action3 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
 
             var takenActions = _storage.Take(_invoker);
 
@@ -67,9 +69,9 @@ namespace Invocation.ReliableAction
         [Test] public void ReliableActionsStorage_HasNoActions_After_TakeMethod_WithPassedFallbackInvoker()
         {
             var invoker2 = Substitute.For<IFallbackInvoker>();
-            var action = new TestsReliableAction(() => { }, _storage, _invoker);
-            var action2 = new TestsReliableAction(() => { }, _storage, invoker2);
-            var action3 = new TestsReliableAction(() => { }, _storage, _invoker);
+            var action = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
+            var action2 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, invoker2);
+            var action3 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
 
             var _ = _storage.Take(_invoker);
 
