@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -11,16 +12,24 @@ namespace UnityUtils.Invocation.ReliableAction
     // TODO Reformat: Extract saving/loading feature into separate interfaces (PlayerPrefs not the only option)
     public class ReliableActionsStorage : IReliableActionsStorage
     {
-        private readonly List<IReliableAction> _newActions = new();
-        private readonly List<int> _newActionIndicesInFallbackGuids = new();
+        private readonly List<IReliableAction> _newActions;
+        private readonly List<int> _newActionIndicesInFallbackGuids;
         private readonly List<Guid> _fallbackActionGuids;
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
+        private readonly List<string> _indexedBaseSaveKeys;
+        private readonly List<string> _indexedGuidSaveKeys;
+        private readonly StringBuilder _stringBuilder = new();
 
         public IReadOnlyList<IReliableAction> NewActions => _newActions;
 
-        public ReliableActionsStorage()
+        public ReliableActionsStorage(int capacity = 10)
         {
+            _newActions = new List<IReliableAction>(capacity);
+            _newActionIndicesInFallbackGuids = new List<int>(capacity);
+            _indexedBaseSaveKeys = new List<string>(capacity);
+            _indexedGuidSaveKeys = new List<string>(capacity);
+            
             LoadAllActionGuids(out _fallbackActionGuids);
         }
 
@@ -143,7 +152,7 @@ namespace UnityUtils.Invocation.ReliableAction
             PlayerPrefs.Save();
         }
 
-        private static void SaveAction(int index, [NotNull] IReliableAction action)
+        private void SaveAction(int index, [NotNull] IReliableAction action)
         {
             var typeGuidSaveKey = GetActionSaveKey_Guid(index);
             PlayerPrefsExt.SetGuid(typeGuidSaveKey, action.TypeGuid);
@@ -152,7 +161,7 @@ namespace UnityUtils.Invocation.ReliableAction
             action.Save(baseSaveKey);
         }
 
-        private static void LoadAllActionGuids(out List<Guid> list)
+        private void LoadAllActionGuids(out List<Guid> list)
         {
             var actionsCount = PlayerPrefs.GetInt(CountSaveKey, defaultValue: 0);
             list = new List<Guid>(actionsCount);
@@ -163,7 +172,7 @@ namespace UnityUtils.Invocation.ReliableAction
             }
         }
 
-        private static Guid LoadActionGuid(int index)
+        private Guid LoadActionGuid(int index)
         {
             var guidSaveKey = GetActionSaveKey_Guid(index);
             if (PlayerPrefsExt.TryGetGuid(guidSaveKey, out var typeGuid))
@@ -175,8 +184,45 @@ namespace UnityUtils.Invocation.ReliableAction
             throw new Exception($"Could not load action by type-guid:{guidSaveKey} at index:{index}");
         }
 
-        // TODO GC: Create pool based on action index
-        private static string GetActionSaveKey_Base(int index) => $"{BaseSaveKey}_Action_{index}";
-        private static string GetActionSaveKey_Guid(int index) => $"{GetActionSaveKey_Base(index)}_TypeGuid";
+        private string GetActionSaveKey_Base(int index)
+        {
+            for (int i = _indexedBaseSaveKeys.Count; i <= index; i += 1)
+            {
+                _indexedBaseSaveKeys.Add(null);
+            }
+            
+            var saveKey = _indexedBaseSaveKeys[index];
+            if (string.IsNullOrEmpty(saveKey))
+            {
+                _stringBuilder.Clear();
+                _stringBuilder.Append(BaseSaveKey);
+                _stringBuilder.Append("_Action_");
+                _stringBuilder.Append(index);
+                saveKey = _stringBuilder.ToString(); // $"{BaseSaveKey}_Action_{index}";
+                _indexedBaseSaveKeys[index] = saveKey;
+            }
+            
+            return saveKey;
+        }
+
+        private string GetActionSaveKey_Guid(int index)
+        {
+            for (int i = _indexedGuidSaveKeys.Count; i <= index; i += 1)
+            {
+                _indexedGuidSaveKeys.Add(null);
+            }
+            
+            var saveKey = _indexedGuidSaveKeys[index];
+            if (string.IsNullOrEmpty(saveKey))
+            {
+                _stringBuilder.Clear();
+                _stringBuilder.Append(GetActionSaveKey_Base(index));
+                _stringBuilder.Append("_TypeGuid");
+                saveKey = _stringBuilder.ToString(); // $"{GetActionSaveKey_Base(index)}_TypeGuid";
+                _indexedGuidSaveKeys[index] = saveKey;
+            }
+            
+            return saveKey;
+        }
     }
 }
