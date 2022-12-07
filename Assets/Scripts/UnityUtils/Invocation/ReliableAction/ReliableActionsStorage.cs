@@ -14,16 +14,13 @@ namespace UnityUtils.Invocation.ReliableAction
         private readonly List<IReliableAction> _newActions = new();
         private readonly List<int> _newActionIndicesInFallbackGuids = new();
         private readonly List<Guid> _fallbackActionGuids;
-        private readonly IReliableActionInstantiator _instantiator;
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
 
         public IReadOnlyList<IReliableAction> NewActions => _newActions;
 
-        public ReliableActionsStorage(IReliableActionInstantiator instantiator)
+        public ReliableActionsStorage()
         {
-            _instantiator = instantiator;
-
             LoadAllActionGuids(out _fallbackActionGuids);
         }
 
@@ -53,7 +50,7 @@ namespace UnityUtils.Invocation.ReliableAction
             return true;
         }
 
-        public IList<IReliableAction> Take(IFallbackInvoker invoker)
+        public IList<IReliableAction> CreateAndTake(IFallbackInvoker invoker, IReliableActionFallbackInstantiator instantiator)
         {
             var takenActions = new List<IReliableAction>();
             
@@ -77,7 +74,7 @@ namespace UnityUtils.Invocation.ReliableAction
                     var typeGuid = _fallbackActionGuids[i];
                     if (invoker.SupportedActionTypes.TryGetValue(typeGuid, out var actionType))
                     {
-                        var action = _instantiator.Instantiate(actionType);
+                        var action = instantiator.Instantiate(actionType);
                         var baseSaveKey = GetActionSaveKey_Base(i);
                         action.Load(baseSaveKey);
                         takenActions.Add(action);
@@ -112,9 +109,13 @@ namespace UnityUtils.Invocation.ReliableAction
         private void DeleteAllSaves()
         {
             PlayerPrefs.DeleteKey(CountSaveKey);
-            foreach (var idx in ..(_newActions.Count - 1))
+            
+            if (_newActions.Count > 0)
             {
-                DeleteActionSave(idx);
+                foreach (var idx in ..(_newActions.Count - 1))
+                {
+                    DeleteActionSave(idx);
+                }
             }
         }
 

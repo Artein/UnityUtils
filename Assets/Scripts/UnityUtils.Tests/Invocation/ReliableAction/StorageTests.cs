@@ -10,16 +10,17 @@ namespace Invocation.ReliableAction
     [TestFixture]
     public class StorageTests
     {
-        private ReliableActionsStorage _storage;
+        private IReliableActionsStorage _storage;
         private IFallbackInvoker _invoker;
         private TestsModel _testsModel;
-        private readonly TestsReliableActionInstantiator _instantiator = new(); // has no caches
+        private IReliableActionFallbackInstantiator _fallbackInstantiator;
 
         [SetUp] public void OnSetUp()
         {
-            _storage = new ReliableActionsStorage(_instantiator);
+            _storage = new ReliableActionsStorage();
             _invoker = Substitute.For<IFallbackInvoker>();
             _testsModel = new TestsModel();
+            _fallbackInstantiator = new TestsReliableActionFallbackInstantiator(_testsModel, _storage);
         }
 
         [TearDown] public void OnTearDown()
@@ -57,7 +58,7 @@ namespace Invocation.ReliableAction
             var action2 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, invoker2);
             var action3 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
 
-            var takenActions = _storage.Take(_invoker);
+            var takenActions = _storage.CreateAndTake(_invoker, _fallbackInstantiator);
 
             takenActions.Should().NotBeEmpty()
                 .And.HaveCount(2)
@@ -73,7 +74,7 @@ namespace Invocation.ReliableAction
             var action2 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, invoker2);
             var action3 = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _invoker);
 
-            var _ = _storage.Take(_invoker);
+            var _ = _storage.CreateAndTake(_invoker, _fallbackInstantiator);
 
             _storage.NewActions.Should().NotBeEmpty()
                 .And.HaveCount(1)
@@ -88,6 +89,5 @@ namespace Invocation.ReliableAction
         }
         
         // TODO: Add saving and loading tests
-        // TODO: Add fallback invocation tests
     }
 }
