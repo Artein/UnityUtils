@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -82,12 +81,5 @@ namespace Invocation.ReliableAction
                 .And.NotContain(action)
                 .And.NotContain(action3);
         }
-
-        [Test] public void ReliableActionStorage_OnCreation_LoadsAllSavedActions()
-        {
-            throw new NotImplementedException();
-        }
-        
-        // TODO: Add saving and loading tests
     }
 }

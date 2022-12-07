@@ -96,7 +96,5 @@ namespace Invocation.ReliableAction
                 testsModel.Count.Should().Be(1);
             }
         }
-
-        // TODO: Add fallback invocation tests
     }
 }
