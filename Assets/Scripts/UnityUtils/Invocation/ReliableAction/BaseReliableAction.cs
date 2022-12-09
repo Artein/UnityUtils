@@ -34,7 +34,6 @@ namespace UnityUtils.Invocation.ReliableAction
         public IDisposable LockInvocation()
         {
             _locksCount += 1;
-            // TODO Optimization: DisposableActions can use pools
             return new DisposableAction(UnlockInvocation);
         }
 
