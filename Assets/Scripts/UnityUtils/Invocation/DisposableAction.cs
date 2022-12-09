@@ -6,40 +6,41 @@ namespace UnityUtils.Invocation
 {
     public interface IDisposableAction : IDisposable
     {
-        bool IsDisposed { get; }
+        bool IsInvoked { get; }
     }
     
-    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+    [DebuggerDisplay("IsDisposed: {IsInvoked} | " +
                      "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method}")]
     public class DisposableAction : IDisposableAction
     {
-        private Action _action;
-        public bool IsDisposed => _action == null;
+        private readonly Action _action;
+        private readonly Action _resetAction;
+        public bool IsInvoked { get; private set; }
 
         public DisposableAction([NotNull] Action action)
         {
             _action = action;
         }
     
-        void IDisposable.Dispose()
+        public void Dispose()
         {
-            if (!IsDisposed)
+            if (!IsInvoked)
             {
+                IsInvoked = true;
                 _action.Invoke();
-                _action = null;
             }
         }
     }
     
-    [DebuggerDisplay("IsDisposed: {IsDisposed} | " +
+    [DebuggerDisplay("IsDisposed: {IsInvoked} | " +
                      "_action: {_action == null ? null : _action.Target+\"___\"+_action.Method} | " +
                      "_args: {_args}")]
     public class DisposableAction<TArgs> : IDisposableAction 
         where TArgs : struct
     {
-        private Action<TArgs> _action;
+        private readonly Action<TArgs> _action;
         private readonly TArgs _args;
-        public bool IsDisposed => _action == null;
+        public bool IsInvoked { get; private set; }
             
         public DisposableAction([NotNull] Action<TArgs> action, TArgs args)
         {
@@ -47,12 +48,12 @@ namespace UnityUtils.Invocation
             _args = args;
         }
         
-        void IDisposable.Dispose()
+        public void Dispose()
         {
-            if (!IsDisposed)
+            if (!IsInvoked)
             {
+                IsInvoked = true;
                 _action.Invoke(_args);
-                _action = null;
             }
         }
     }

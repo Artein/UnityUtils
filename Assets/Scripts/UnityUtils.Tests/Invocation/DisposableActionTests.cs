@@ -18,7 +18,7 @@ namespace Invocation
             callCount.Should().Be(1);
         }
         
-        [Test] public void DontFires_WhenHandleWasntReleased()
+        [Test] public void DontFires_WhenHandleWasNotReleased()
         {
             int callCount = 0;
             void MyAction() => callCount++;
@@ -39,7 +39,7 @@ namespace Invocation
             callCount.Should().Be(1);
         }
         
-        [Test] public void WithArguments_DontFires_WhenHandleWasntReleased()
+        [Test] public void WithArguments_DontFires_WhenHandleWasNotReleased()
         {
             int callCount = 0;
             void MyAction(Args _) => callCount++;
@@ -52,13 +52,9 @@ namespace Invocation
         [Test] public void WithArguments_Fires_HavingCorrectArguments()
         {
             var receivedArgs = new Args();
-            
-            void MyAction(Args args)
-            {
-                receivedArgs = args;
-            }
+            void MyAction(Args args) => receivedArgs = args;
 
-            var passedArgs = new Args { Int = 5, Float = 6.3f, String = "asdf" };
+            var passedArgs = new Args { Int = 5, Float = 6.3f, String = "MyString" };
             IDisposable disposableAction = new DisposableAction<Args>(MyAction, passedArgs);
             disposableAction.Dispose();
 
