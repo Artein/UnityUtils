@@ -5,8 +5,7 @@ using UnityUtils.Invocation;
 
 namespace Invocation
 {
-    [TestFixture]
-    public class DisposableActionTests
+    [TestFixture] public class DisposableActionTests
     {
         [Test] public void Fires_AfterHandleReleased()
         {

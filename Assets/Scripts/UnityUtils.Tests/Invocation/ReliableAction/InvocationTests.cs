@@ -5,8 +5,7 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    [TestFixture]
-    public class InvocationTests
+    [TestFixture] public class InvocationTests
     {
         private IReliableActionsStorage _storage;
         private IFallbackInvoker _fallbackInvoker;

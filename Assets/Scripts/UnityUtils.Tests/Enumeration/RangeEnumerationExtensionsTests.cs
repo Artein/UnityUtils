@@ -6,7 +6,7 @@ using UnityUtils.Enumeration;
 
 namespace Enumeration
 {
-    public class RangeEnumerationExtensionsTests
+    [TestFixture] public class RangeEnumerationExtensionsTests
     {
         [Test] public void FixedIndexer()
         {

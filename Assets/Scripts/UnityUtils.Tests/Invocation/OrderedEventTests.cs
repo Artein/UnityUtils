@@ -6,8 +6,7 @@ using UnityUtils.Invocation;
 
 namespace Invocation
 {
-    [TestFixture]
-    public class OrderedEventTests
+    [TestFixture] public class OrderedEventTests
     {
         [Test] public void Fires()
         {

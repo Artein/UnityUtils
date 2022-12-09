@@ -6,8 +6,7 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    [TestFixture]
-    public class StorageTests
+    [TestFixture] public class StorageTests
     {
         private IReliableActionsStorage _storage;
         private IFallbackInvoker _invoker;

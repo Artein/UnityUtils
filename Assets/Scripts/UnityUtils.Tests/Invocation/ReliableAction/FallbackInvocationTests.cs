@@ -7,8 +7,7 @@ using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
-    [TestFixture]
-    public class FallbackInvocationTests
+    [TestFixture] public class FallbackInvocationTests
     {
         [TearDown] public void OnTearDown()
         {

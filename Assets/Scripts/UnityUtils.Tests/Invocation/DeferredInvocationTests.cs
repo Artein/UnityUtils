@@ -5,8 +5,7 @@ using UnityUtils.Invocation;
 
 namespace Invocation
 {
-    [TestFixture]
-    public class DeferredInvocationTests
+    [TestFixture] public class DeferredInvocationTests
     {
         [Test] public void LockedAtCreation()
         {
