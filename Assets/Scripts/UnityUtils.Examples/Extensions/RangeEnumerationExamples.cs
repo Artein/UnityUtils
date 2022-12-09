@@ -1,11 +1,11 @@
 using System;
-using UnityUtils.Enumeration;
+using UnityUtils.Extensions;
 
-namespace UnityUtils.Examples
+namespace UnityUtils.Examples.Extensions
 {
-    internal class EnumerationExamples
+    internal class RangeEnumerationExamples
     {
-        public EnumerationExamples()
+        public RangeEnumerationExamples()
         {
             // 1. Fixed range with variable as right bound. Prints from [5; 20]
             int length = 20;

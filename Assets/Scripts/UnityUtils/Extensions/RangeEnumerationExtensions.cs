@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityUtils.Enumeration
+namespace UnityUtils.Extensions
 {
     // Makes possible to enumerate with ranges. No heap allocations. Check EnumerationExamples for examples
     public static class RangeEnumerationExtensions

@@ -4,7 +4,6 @@ using System.Text;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityUtils.Enumeration;
 using UnityUtils.Extensions;
 
 namespace UnityUtils.Invocation.ReliableAction
