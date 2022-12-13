@@ -9,6 +9,13 @@ namespace Invocation.ReliableAction
 {
     [TestFixture] public class FallbackInvocationTests
     {
+        private IReliableActionsStorage _cleanupStorage;
+
+        [TearDown] public void TearDown()
+        {
+            _cleanupStorage.Clear();
+        }
+        
         [Test] public void FallbackInvocation_Performs()
         {
             { // First "app run"
@@ -23,16 +30,13 @@ namespace Invocation.ReliableAction
             
             { // Consecutive "app run"
                 var testsModel = new TestsModel();
-                var storage = new ReliableActionsStorage();
-                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
-                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator, false);
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
 
                 fallbackInvoker.Invoke();
 
                 testsModel.Count.Should().Be(1);
-                
-                // Cleanup
-                storage.Clear();
             }
         }
         
@@ -52,9 +56,9 @@ namespace Invocation.ReliableAction
             { // Consecutive "app run"
                 var countChanges = new List<int>(2);
                 var testsModel = new TestsModel();
-                var storage = new ReliableActionsStorage();
-                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
-                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator, false);
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
 
                 void CountChanged(int count) => countChanges.Add(count);
                 testsModel.CountChanged += CountChanged;
@@ -65,9 +69,6 @@ namespace Invocation.ReliableAction
                 countChanges.Should().NotBeEmpty()
                     .And.HaveCount(2)
                     .And.ContainInOrder(2, 5);
-                
-                // Cleanup
-                storage.Clear();
             }
         }
         
@@ -86,17 +87,14 @@ namespace Invocation.ReliableAction
 
             { // Consecutive "app run"
                 var testsModel = new TestsModel();
-                var storage = new ReliableActionsStorage();
-                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
-                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator, false);
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
 
                 Action action = () => { fallbackInvoker.Invoke(); };
 
                 action.Should().NotThrow();
                 testsModel.Count.Should().Be(1);
-                
-                // Cleanup
-                storage.Clear();
             }
         }
 
@@ -129,16 +127,13 @@ namespace Invocation.ReliableAction
             
             { // Consecutive "app run"
                 var testsModel = new TestsModel();
-                var storage = new ReliableActionsStorage();
-                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
                 
-                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator, false);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
                 fallbackInvoker.Invoke();
 
                 testsModel.Count.Should().Be(1);
-                
-                // Cleanup
-                storage.Clear();
             }
         }
     }
