@@ -12,32 +12,32 @@ namespace UnityUtils.Invocation.ReliableAction
     public class ReliableActionsStorage : IReliableActionsStorage
     {
         private readonly List<IReliableAction> _newActions;
-        private readonly List<int> _newActionIndicesInFallbackGuids;
-        private readonly List<Guid> _fallbackActionGuids;
+        private readonly List<int> _newActionsSaveSlots;
+        private readonly List<Guid> _fallbackActionGuids; // can be indexed by save slots
         private const string BaseSaveKey = "UU_ReliableActionsStorage";
         private const string CountSaveKey = BaseSaveKey + "_Count";
-        private readonly List<string> _indexedBaseSaveKeys;
-        private readonly List<string> _indexedGuidSaveKeys;
-        private readonly StringBuilder _stringBuilder = new();
+        private readonly List<string> _slottedBaseSaveKeys;
+        private readonly List<string> _slottedGuidSaveKeys;
+        private readonly StringBuilder _stringBuilder = new(50);
 
         public IReadOnlyList<IReliableAction> NewActions => _newActions;
 
         public ReliableActionsStorage(int capacity = 10)
         {
             _newActions = new List<IReliableAction>(capacity);
-            _newActionIndicesInFallbackGuids = new List<int>(capacity);
-            _indexedBaseSaveKeys = new List<string>(capacity);
-            _indexedGuidSaveKeys = new List<string>(capacity);
+            _newActionsSaveSlots = new List<int>(capacity);
+            _slottedBaseSaveKeys = new List<string>(capacity);
+            _slottedGuidSaveKeys = new List<string>(capacity);
             
             LoadAllActionGuids(out _fallbackActionGuids);
         }
 
         public void Add(IReliableAction action)
         {
-            var newActionIndex = AddNewAction(action);
+            var saveSlot = AddNewAction(action);
 
-            PlayerPrefs.SetInt(CountSaveKey, _newActions.Count);
-            SaveAction(newActionIndex, action);
+            PlayerPrefs.SetInt(CountSaveKey, _fallbackActionGuids.Count);
+            SaveAction(saveSlot, action);
             PlayerPrefs.Save();
         }
 
@@ -62,7 +62,7 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             DeleteAllSaves();
             _newActions.Clear();
-            _newActionIndicesInFallbackGuids.Clear();
+            _newActionsSaveSlots.Clear();
             _fallbackActionGuids.Clear();
         }
 
@@ -105,23 +105,25 @@ namespace UnityUtils.Invocation.ReliableAction
             return takenActions;
         }
 
-        /// <returns> Index in fallback actions </returns>
+        /// <returns> Save slot of the fallback actions </returns>
         private int AddNewAction(IReliableAction action)
         {
             Assert.IsFalse(_newActions.Contains(action));
+            Assert.AreEqual(_newActions.Count, _newActionsSaveSlots.Count);
+            var saveSlot = _fallbackActionGuids.Count;
+            
             _newActions.Add(action);
-            var newActionIndex = _fallbackActionGuids.Count;
             _fallbackActionGuids.Add(action.TypeGuid);
-            _newActionIndicesInFallbackGuids.Add(newActionIndex);
-            return newActionIndex;
+            _newActionsSaveSlots.Add(saveSlot);
+            return saveSlot;
         }
 
         private void RemoveNewActionAt(int index)
         {
             _newActions.RemoveAt(index);
-            var fallbackIndex = _newActionIndicesInFallbackGuids[index];
-            _newActionIndicesInFallbackGuids.RemoveAt(index);
-            _fallbackActionGuids.RemoveAt(fallbackIndex);
+            var saveSlot = _newActionsSaveSlots[index];
+            _newActionsSaveSlots.RemoveAt(index);
+            _fallbackActionGuids.RemoveAt(saveSlot);
         }
 
         private void DeleteAllSaves()
@@ -130,42 +132,45 @@ namespace UnityUtils.Invocation.ReliableAction
             
             if (_newActions.Count > 0)
             {
-                foreach (var idx in ..(_newActions.Count - 1))
+                for (int i = _newActions.Count - 1; i >= 0; i -= 1)
                 {
-                    DeleteActionSave(idx);
+                    var saveSlot = _newActionsSaveSlots[i];
+                    var guidSaveKey = GetActionSaveKey_Guid(saveSlot);
+                    PlayerPrefs.DeleteKey(guidSaveKey);
+                    
+                    var reliableAction = _newActions[i];
+                    var baseSaveKey = GetActionSaveKey_Base(saveSlot);
+                    reliableAction.DeleteSave(baseSaveKey);
+                    
+                    RemoveNewActionAt(i);
+                }
+
+                for (int saveSlot = 0; saveSlot < _fallbackActionGuids.Count; saveSlot += 1)
+                {
+                    var guidSaveKey = GetActionSaveKey_Guid(saveSlot);
+                    PlayerPrefs.DeleteKey(guidSaveKey);
                 }
             }
         }
 
-        private void DeleteActionSave(int actionIndex)
-        {
-            Assert.IsTrue(actionIndex >= 0);
-            Assert.IsTrue(actionIndex < _newActions.Count);
-            var guidSaveKey = GetActionSaveKey_Guid(actionIndex);
-            PlayerPrefs.DeleteKey(guidSaveKey);
-            var reliableAction = _newActions[actionIndex];
-            var baseSaveKey = GetActionSaveKey_Base(actionIndex);
-            reliableAction.DeleteSave(baseSaveKey);
-        }
-
         private void SaveAll()
         {
-            PlayerPrefs.SetInt(CountSaveKey, _newActions.Count);
-            for (int i = 0; i < _newActions.Count; i++)
+            PlayerPrefs.SetInt(CountSaveKey, _fallbackActionGuids.Count);
+            for (int i = 0; i < _newActions.Count; i += 1)
             {
                 var action = _newActions[i];
-                var fallbackIndex = _newActionIndicesInFallbackGuids[i];
-                SaveAction(fallbackIndex, action);
+                var saveSlot = _newActionsSaveSlots[i];
+                SaveAction(saveSlot, action);
             }
             PlayerPrefs.Save();
         }
 
-        private void SaveAction(int index, [NotNull] IReliableAction action)
+        private void SaveAction(int saveSlot, [NotNull] IReliableAction action)
         {
-            var typeGuidSaveKey = GetActionSaveKey_Guid(index);
+            var typeGuidSaveKey = GetActionSaveKey_Guid(saveSlot);
             PlayerPrefsExt.SetGuid(typeGuidSaveKey, action.TypeGuid);
 
-            var baseSaveKey = GetActionSaveKey_Base(index);
+            var baseSaveKey = GetActionSaveKey_Base(saveSlot);
             action.Save(baseSaveKey);
         }
 
@@ -173,61 +178,65 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             var actionsCount = PlayerPrefs.GetInt(CountSaveKey, defaultValue: 0);
             list = new List<Guid>(actionsCount);
-            for (var i = 0; i < actionsCount; i += 1)
+            for (var saveSlot = 0; saveSlot < actionsCount; saveSlot += 1)
             {
-                var action = LoadActionGuid(i);
+                var action = LoadActionGuid(saveSlot);
                 list.Add(action);
             }
         }
 
-        private Guid LoadActionGuid(int index)
+        private Guid LoadActionGuid(int saveSlot)
         {
-            var guidSaveKey = GetActionSaveKey_Guid(index);
+            var guidSaveKey = GetActionSaveKey_Guid(saveSlot);
             if (PlayerPrefsExt.TryGetGuid(guidSaveKey, out var typeGuid))
             {
                 Assert.IsTrue(typeGuid.HasValue);
                 return typeGuid.Value;
             }
             
-            throw new Exception($"Could not load action by type-guid:{guidSaveKey} at index:{index}");
+            throw new Exception($"Could not load action by type-guid:{guidSaveKey} at {nameof(saveSlot)}:{saveSlot}");
         }
 
-        private string GetActionSaveKey_Base(int index)
+        private string GetActionSaveKey_Base(int saveSlot)
         {
-            for (int i = _indexedBaseSaveKeys.Count; i <= index; i += 1)
+            // TODO Performance: If index is large, _indexedBaseSaveKeys might grow several times increasing GC
+            // Grow list right away if the diff between Count and Index too big
+            for (int i = _slottedBaseSaveKeys.Count; i <= saveSlot; i += 1)
             {
-                _indexedBaseSaveKeys.Add(null);
+                _slottedBaseSaveKeys.Add(null);
             }
             
-            var saveKey = _indexedBaseSaveKeys[index];
+            var saveKey = _slottedBaseSaveKeys[saveSlot];
             if (string.IsNullOrEmpty(saveKey))
             {
                 _stringBuilder.Clear();
                 _stringBuilder.Append(BaseSaveKey);
                 _stringBuilder.Append("_Action_");
-                _stringBuilder.Append(index);
-                saveKey = _stringBuilder.ToString(); // $"{BaseSaveKey}_Action_{index}";
-                _indexedBaseSaveKeys[index] = saveKey;
+                _stringBuilder.Append(saveSlot);
+                saveKey = _stringBuilder.ToString(); // $"{BaseSaveKey}_Action_{saveKey}";
+                _slottedBaseSaveKeys[saveSlot] = saveKey;
             }
             
             return saveKey;
         }
 
-        private string GetActionSaveKey_Guid(int index)
+        private string GetActionSaveKey_Guid(int saveSlot)
         {
-            for (int i = _indexedGuidSaveKeys.Count; i <= index; i += 1)
+            // TODO Performance: If index is large, _indexedBaseSaveKeys might grow several times increasing GC
+            // Grow list right away if the diff between Count and Index too big
+            for (int i = _slottedGuidSaveKeys.Count; i <= saveSlot; i += 1)
             {
-                _indexedGuidSaveKeys.Add(null);
+                _slottedGuidSaveKeys.Add(null);
             }
             
-            var saveKey = _indexedGuidSaveKeys[index];
+            var saveKey = _slottedGuidSaveKeys[saveSlot];
             if (string.IsNullOrEmpty(saveKey))
             {
                 _stringBuilder.Clear();
-                _stringBuilder.Append(GetActionSaveKey_Base(index));
+                _stringBuilder.Append(GetActionSaveKey_Base(saveSlot));
                 _stringBuilder.Append("_TypeGuid");
-                saveKey = _stringBuilder.ToString(); // $"{GetActionSaveKey_Base(index)}_TypeGuid";
-                _indexedGuidSaveKeys[index] = saveKey;
+                saveKey = _stringBuilder.ToString(); // $"{GetActionSaveKey_Base(saveSlot)}_TypeGuid";
+                _slottedGuidSaveKeys[saveSlot] = saveKey;
             }
             
             return saveKey;
