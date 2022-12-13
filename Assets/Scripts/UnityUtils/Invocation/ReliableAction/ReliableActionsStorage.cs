@@ -141,8 +141,6 @@ namespace UnityUtils.Invocation.ReliableAction
                     var reliableAction = _newActions[i];
                     var baseSaveKey = GetActionSaveKey_Base(saveSlot);
                     reliableAction.DeleteSave(baseSaveKey);
-                    
-                    RemoveNewActionAt(i);
                 }
 
                 for (int saveSlot = 0; saveSlot < _fallbackActionGuids.Count; saveSlot += 1)
