@@ -199,7 +199,7 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             // TODO Performance: If index is large, _indexedBaseSaveKeys might grow several times increasing GC
             // Grow list right away if the diff between Count and Index too big
-            for (int i = _slottedBaseSaveKeys.Count; i <= saveSlot; i += 1)
+            while (_slottedBaseSaveKeys.Count <= saveSlot)
             {
                 _slottedBaseSaveKeys.Add(null);
             }
@@ -222,7 +222,7 @@ namespace UnityUtils.Invocation.ReliableAction
         {
             // TODO Performance: If index is large, _indexedBaseSaveKeys might grow several times increasing GC
             // Grow list right away if the diff between Count and Index too big
-            for (int i = _slottedGuidSaveKeys.Count; i <= saveSlot; i += 1)
+            while (_slottedGuidSaveKeys.Count <= saveSlot)
             {
                 _slottedGuidSaveKeys.Add(null);
             }
