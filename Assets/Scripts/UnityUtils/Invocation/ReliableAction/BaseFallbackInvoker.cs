@@ -21,9 +21,6 @@ namespace UnityUtils.Invocation.ReliableAction
         
         protected void Invoke()
         {
-            // TODO: Fix invocation reliability when invoker take several actions and some of them fail early
-            // Cause we already take them and delete from the save
-            // Take by one and if invocation succeeds — delete that one, then continue?
             var actions = _storage.CreateAndTake(this, _instantiator);
             if (actions == null)
             {

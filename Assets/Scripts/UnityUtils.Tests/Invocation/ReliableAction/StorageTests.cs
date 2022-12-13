@@ -1,7 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using UnityEngine;
 using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
@@ -23,7 +22,7 @@ namespace Invocation.ReliableAction
 
         [TearDown] public void OnTearDown()
         {
-            PlayerPrefs.DeleteAll(); // TODO: Delete everything related ONLY to ReliableActionsStorage
+            _storage.Clear();
         }
         
         [Test] public void ReliableActionsStorage_ContainsReliableAction_AfterItWasCreated()

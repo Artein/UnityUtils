@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using UnityEngine;
 using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
 {
     [TestFixture] public class FallbackInvocationTests
     {
-        [TearDown] public void OnTearDown()
-        {
-            PlayerPrefs.DeleteAll();
-        }
-
         [Test] public void FallbackInvocation_Performs()
         {
             { // First "app run"
@@ -35,6 +29,9 @@ namespace Invocation.ReliableAction
                 fallbackInvoker.Invoke();
 
                 testsModel.Count.Should().Be(1);
+                
+                // Cleanup
+                storage.Clear();
             }
         }
         
@@ -67,6 +64,9 @@ namespace Invocation.ReliableAction
                 countChanges.Should().NotBeEmpty()
                     .And.HaveCount(2)
                     .And.ContainInOrder(2, 5);
+                
+                // Cleanup
+                storage.Clear();
             }
         }
         
@@ -93,6 +93,9 @@ namespace Invocation.ReliableAction
 
                 action.Should().NotThrow();
                 testsModel.Count.Should().Be(1);
+                
+                // Cleanup
+                storage.Clear();
             }
         }
     }

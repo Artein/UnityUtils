@@ -58,6 +58,14 @@ namespace UnityUtils.Invocation.ReliableAction
             return true;
         }
 
+        public void Clear()
+        {
+            DeleteAllSaves();
+            _newActions.Clear();
+            _newActionIndicesInFallbackGuids.Clear();
+            _fallbackActionGuids.Clear();
+        }
+
         public IList<IReliableAction> CreateAndTake(IFallbackInvoker invoker, IReliableActionFallbackInstantiator instantiator)
         {
             var takenActions = new List<IReliableAction>();

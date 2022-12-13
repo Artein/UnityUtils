@@ -8,6 +8,7 @@ namespace UnityUtils.Invocation.ReliableAction
         IReadOnlyList<IReliableAction> NewActions { get; }
         void Add([NotNull] IReliableAction action);
         bool Remove([NotNull] IReliableAction action);
+        void Clear();
         
         // List contains actions in backward order
         [MustUseReturnValue, CanBeNull]
