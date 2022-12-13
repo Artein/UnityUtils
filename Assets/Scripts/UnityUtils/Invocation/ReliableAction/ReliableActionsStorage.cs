@@ -58,7 +58,6 @@ namespace UnityUtils.Invocation.ReliableAction
             return true;
         }
 
-        // TODO: Fix returning actions in backward order
         public IList<IReliableAction> CreateAndTake(IFallbackInvoker invoker, IReliableActionFallbackInstantiator instantiator)
         {
             var takenActions = new List<IReliableAction>();
@@ -92,6 +91,8 @@ namespace UnityUtils.Invocation.ReliableAction
                 }
             }
             SaveAll();
+            
+            takenActions.Reverse_NoHeapAlloc();
             
             return takenActions;
         }

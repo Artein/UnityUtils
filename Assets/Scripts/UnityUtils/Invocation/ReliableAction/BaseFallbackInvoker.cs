@@ -30,7 +30,7 @@ namespace UnityUtils.Invocation.ReliableAction
                 return;
             }
             
-            for (int i = actions.Count - 1; i >= 0; i -= 1)
+            for (int i = 0; i < actions.Count; i += 1)
             {
                 // For now, I don't want to break iteration over all actions even though one of them is failed (throws exception)
                 try
