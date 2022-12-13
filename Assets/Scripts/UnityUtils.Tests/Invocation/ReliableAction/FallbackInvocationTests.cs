@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Invocation.ReliableAction.Helpers;
 using NUnit.Framework;
 using UnityUtils.Invocation.ReliableAction;
 
@@ -92,6 +93,48 @@ namespace Invocation.ReliableAction
                 Action action = () => { fallbackInvoker.Invoke(); };
 
                 action.Should().NotThrow();
+                testsModel.Count.Should().Be(1);
+                
+                // Cleanup
+                storage.Clear();
+            }
+        }
+
+        [Test] public void FallbackInvocation_StatePersists_AcrossMultipleLaunches_WhenSomeInvoker_WasNotInvoked()
+        {
+            { // First "app run"
+                var testsModel = new TestsModel();
+                var storage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator);
+                var _ = new TestsModel_IncrementCounter_ReliableAction(testsModel, storage, fallbackInvoker);
+                var __ = new ThrowsExceptionReliableAction(storage, fallbackInvoker);
+                
+                var secondFallbackInvoker = new SecondTestsFallbackInvoker(storage, fallbackInstantiator);
+                var ___ = new EmptyReliableAction(storage, secondFallbackInvoker);
+                
+                GC.Collect(0);
+            }
+            
+            { // Second "app run" — only one invoker invoked
+                var testsModel = new TestsModel();
+                var storage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                
+                var secondFallbackInvoker = new SecondTestsFallbackInvoker(storage, fallbackInstantiator);
+                secondFallbackInvoker.Invoke();
+
+                GC.Collect(0);
+            }
+            
+            { // Consecutive "app run"
+                var testsModel = new TestsModel();
+                var storage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                
+                var fallbackInvoker = new TestsFallbackInvoker(storage, fallbackInstantiator, false);
+                fallbackInvoker.Invoke();
+
                 testsModel.Count.Should().Be(1);
                 
                 // Cleanup

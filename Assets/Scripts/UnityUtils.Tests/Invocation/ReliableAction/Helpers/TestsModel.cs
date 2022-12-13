@@ -1,6 +1,6 @@
 using System;
 
-namespace Invocation.ReliableAction
+namespace Invocation.ReliableAction.Helpers
 {
     public class TestsModel
     {

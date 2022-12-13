@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityUtils.Invocation.ReliableAction;
 
-namespace Invocation.ReliableAction
+namespace Invocation.ReliableAction.Helpers
 {
     internal class TestsFallbackInvoker : BaseFallbackInvoker
     {

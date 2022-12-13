@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityUtils.Invocation.ReliableAction;
 
-namespace Invocation.ReliableAction
+namespace Invocation.ReliableAction.Helpers
 {
     internal sealed class TestsModel_IncrementCounter_ReliableAction : BaseReliableAction<TestsModel_IncrementCounter_ReliableAction.Args>
     {

@@ -1,16 +1,16 @@
 using System;
 using UnityUtils.Invocation.ReliableAction;
 
-namespace Invocation.ReliableAction
+namespace Invocation.ReliableAction.Helpers
 {
-    internal sealed class ThrowsExceptionReliableAction : BaseReliableAction<EmptyArguments>
+    internal sealed class EmptyReliableAction : BaseReliableAction<EmptyArguments>
     {
-        public ThrowsExceptionReliableAction(IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
+        public EmptyReliableAction(IReliableActionsStorage storage, IFallbackInvoker invoker, bool isFallbackInvocation = false) 
             : base(storage, invoker, isFallbackInvocation)
         {
         }
 
-        public static readonly Guid StaticTypeGuid = new("FFF1B93C-ADDE-4561-BC57-9A18CEFA5788");
+        public static readonly Guid StaticTypeGuid = new("EFAA74C7-554C-41B6-8160-B87CC8E05F69");
         public override Guid TypeGuid => StaticTypeGuid;
         
         public override void Save(string saveKey)
@@ -30,7 +30,7 @@ namespace Invocation.ReliableAction
 
         protected override void Invoke()
         {
-            throw new NotImplementedException();
+            // nothing to do
         }
     }
 }

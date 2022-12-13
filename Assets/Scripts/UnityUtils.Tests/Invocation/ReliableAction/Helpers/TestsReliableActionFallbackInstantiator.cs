@@ -1,7 +1,7 @@
 using System;
 using UnityUtils.Invocation.ReliableAction;
 
-namespace Invocation.ReliableAction
+namespace Invocation.ReliableAction.Helpers
 {
     public class TestsReliableActionFallbackInstantiator : IReliableActionFallbackInstantiator
     {
@@ -25,6 +25,12 @@ namespace Invocation.ReliableAction
             if (type == typeof(ThrowsExceptionReliableAction))
             {
                 var reliableAction = new ThrowsExceptionReliableAction(_storage, null, true);
+                return reliableAction;
+            }
+
+            if (type == typeof(EmptyReliableAction))
+            {
+                var reliableAction = new EmptyReliableAction(_storage, null, true);
                 return reliableAction;
             }
 
