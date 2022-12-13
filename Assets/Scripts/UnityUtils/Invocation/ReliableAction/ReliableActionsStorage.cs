@@ -230,8 +230,10 @@ namespace UnityUtils.Invocation.ReliableAction
             var saveKey = _slottedGuidSaveKeys[saveSlot];
             if (string.IsNullOrEmpty(saveKey))
             {
+                var baseSaveKey = GetActionSaveKey_Base(saveSlot);
+                
                 _stringBuilder.Clear();
-                _stringBuilder.Append(GetActionSaveKey_Base(saveSlot));
+                _stringBuilder.Append(baseSaveKey);
                 _stringBuilder.Append("_TypeGuid");
                 saveKey = _stringBuilder.ToString(); // $"{GetActionSaveKey_Base(saveSlot)}_TypeGuid";
                 _slottedGuidSaveKeys[saveSlot] = saveKey;
