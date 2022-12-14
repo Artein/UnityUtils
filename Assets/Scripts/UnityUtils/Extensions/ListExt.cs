@@ -5,7 +5,7 @@ namespace UnityUtils.Extensions
 {
     public static class ListExt
     {
-        public static IList<T> Reverse_NoHeapAlloc<T>(this IList<T> list)
+        public static void Reverse_NoHeapAlloc<T>(this IList<T> list)
         {
             if (list == null)
             {
@@ -19,8 +19,6 @@ namespace UnityUtils.Extensions
                 var j = count - i - 1;
                 (list[i], list[j]) = (list[j], list[i]);
             }
-
-            return list;
         }
 
         public static List<T> EnsureSize<T>(this List<T> list, int size, T value = default)
