@@ -33,7 +33,7 @@ namespace UnityUtils.Invocation.ReliableAction
                     var action = actions[i];
                     action.TryInvoke();
                 }
-                catch (Exception exception) // hide exception
+                catch (Exception exception) // hide and just log exception
                 {
                     if (_logExceptionsDuringInvocation)
                     {

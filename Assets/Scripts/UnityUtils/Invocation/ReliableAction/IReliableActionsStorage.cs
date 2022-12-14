@@ -10,7 +10,6 @@ namespace UnityUtils.Invocation.ReliableAction
         bool Remove([NotNull] IReliableAction action);
         void Clear();
         
-        // List contains actions in backward order
         [MustUseReturnValue]
         IList<IReliableAction> CreateAndTake([NotNull] IFallbackInvoker invoker, IReliableActionFallbackInstantiator instantiator);
     }
