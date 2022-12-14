@@ -2,9 +2,11 @@
 
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace UnityUtils.Helpers
 {
+    [ExcludeFromCoverage]
     public static class ClearPlayerPrefsMenuItem
     {
         [MenuItem("Tools/Clear PlayerPrefs")]
