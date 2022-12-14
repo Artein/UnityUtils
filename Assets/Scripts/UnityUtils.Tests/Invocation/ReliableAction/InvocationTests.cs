@@ -95,6 +95,18 @@ namespace Invocation.ReliableAction
             _testsModel.Count.Should().Be(0);
         }
 
+        [Test] public void ReliableAction_DoesInvokes_WhenUnlocked()
+        {
+            var reliableAction = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _fallbackInvoker);
+
+            using (reliableAction.LockInvocation())
+            {
+                reliableAction.TryInvoke();
+            }
+
+            _testsModel.Count.Should().Be(1);
+        }
+
         [Test] public void ReliableAction_IsLockedProperty_ReturnsTrue_WithLockedInvocation()
         {
             var reliableAction = new TestsModel_IncrementCounter_ReliableAction(_testsModel, _storage, _fallbackInvoker);

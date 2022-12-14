@@ -80,5 +80,15 @@ namespace Invocation.ReliableAction
                 .And.NotContain(action)
                 .And.NotContain(action3);
         }
+
+        [Test] public void ReliableActionsStorage_Remove_Method_ReturnsFalse_WhenNothingWasRemoved()
+        {
+            var secondStorage = new ReliableActionsStorage();
+            var actionFromSecondStorage = new TestsModel_IncrementCounter_ReliableAction(_testsModel, secondStorage, _invoker);
+            
+            var wasRemoved = _storage.Remove(actionFromSecondStorage);
+
+            wasRemoved.Should().Be(false);
+        }
     }
 }

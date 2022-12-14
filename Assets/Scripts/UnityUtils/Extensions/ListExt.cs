@@ -30,7 +30,7 @@ namespace UnityUtils.Extensions
 
             if (size < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(size), size, $"{nameof(size)} must be a positive number");
             }
 
             int count = list.Count;

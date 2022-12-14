@@ -105,6 +105,6 @@ namespace UnityUtils.Extensions
             PlayerPrefs.SetString(key, value.ToString(GuidFormat));
         }
 
-        private const string GuidFormat = "N"; // using Number format as the shortest one
+        public const string GuidFormat = "N"; // using Number format as the shortest one
     }
 }

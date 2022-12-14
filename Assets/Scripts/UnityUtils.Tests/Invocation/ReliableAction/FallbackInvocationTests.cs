@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Invocation.ReliableAction.Helpers;
 using NUnit.Framework;
+using UnityUtils;
 using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
@@ -32,11 +33,36 @@ namespace Invocation.ReliableAction
                 var testsModel = new TestsModel();
                 _cleanupStorage = new ReliableActionsStorage();
                 var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
-                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator);
 
                 fallbackInvoker.Invoke();
 
                 testsModel.Count.Should().Be(1);
+            }
+        }
+
+        [Test] public void FallbackInvocation_DoesNotPerform_WhenNoParticularActionWasSaved()
+        {
+            { // First "app run"
+                var testsModel = new TestsModel();
+                var storage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                
+                var secondFallbackInvoker = new SecondTestsFallbackInvoker(storage, fallbackInstantiator);
+                var ___ = new EmptyReliableAction(storage, secondFallbackInvoker);
+                
+                GC.Collect(0);
+            }
+            
+            { // Consecutive "app run"
+                var testsModel = new TestsModel();
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator);
+
+                fallbackInvoker.Invoke();
+
+                testsModel.Count.Should().Be(0);
             }
         }
         
@@ -58,7 +84,7 @@ namespace Invocation.ReliableAction
                 var testsModel = new TestsModel();
                 _cleanupStorage = new ReliableActionsStorage();
                 var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
-                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator);
 
                 void CountChanged(int count) => countChanges.Add(count);
                 testsModel.CountChanged += CountChanged;
@@ -89,12 +115,13 @@ namespace Invocation.ReliableAction
                 var testsModel = new TestsModel();
                 _cleanupStorage = new ReliableActionsStorage();
                 var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
-                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator);
 
                 Action action = () => { fallbackInvoker.Invoke(); };
 
                 action.Should().NotThrow();
                 testsModel.Count.Should().Be(1);
+                Assertion.Expect_LogException_NotImplementedException();
             }
         }
 
@@ -130,10 +157,11 @@ namespace Invocation.ReliableAction
                 _cleanupStorage = new ReliableActionsStorage();
                 var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
                 
-                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator);
                 fallbackInvoker.Invoke();
 
                 testsModel.Count.Should().Be(1);
+                Assertion.Expect_LogException_NotImplementedException();
             }
         }
     }
