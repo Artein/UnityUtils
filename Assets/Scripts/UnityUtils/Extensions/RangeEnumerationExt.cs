@@ -3,7 +3,7 @@ using System;
 namespace UnityUtils.Extensions
 {
     // Makes possible to enumerate with ranges. No heap allocations. Check EnumerationExamples for examples
-    public static class RangeEnumerationExtensions
+    public static class RangeEnumerationExt
     {
         public static IntEnumerator GetEnumerator(this Range range)
         {
