@@ -88,9 +88,9 @@ namespace Extensions.PlayerPrefsExtensions
             const string customString = "DEFINITELY_NOT_A_BOOLEAN";
             PlayerPrefs.SetString(TestsSaveKey, customString); // TryGetBool works on Strings
             
-            var receivedBool = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
+            var success = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
             
-            receivedBool.Should().Be(false);
+            success.Should().Be(false);
             LogAssert.Expect(LogType.Error, $"{nameof(PlayerPrefsExt.TryGetBool)}: Could not parse loaded string ({customString})");
         }
         
