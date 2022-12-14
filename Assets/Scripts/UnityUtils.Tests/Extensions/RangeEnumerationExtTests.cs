@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using UnityUtils.Enumeration;
+using UnityUtils.Extensions;
 
-namespace Enumeration
+namespace Extensions
 {
-    public class RangeEnumerationExtensionsTests
+    [TestFixture] public class RangeEnumerationExtTests
     {
         [Test] public void FixedIndexer()
         {
@@ -43,7 +43,7 @@ namespace Enumeration
 
         [Test] public void InfiniteRangeThrowsException()
         {
-            Action action = () => { foreach (int i in 1..) { } };
+            Action action = () => { foreach (int _ in 1..) { } };
 
             action.Should().Throw<NotSupportedException>().WithMessage("Range must be closed");
         }

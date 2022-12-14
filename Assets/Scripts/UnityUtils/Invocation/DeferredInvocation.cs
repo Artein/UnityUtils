@@ -30,11 +30,10 @@ namespace UnityUtils.Invocation
             _actionHandle = disposableAction;
         }
 
-        IDisposable IDeferredInvocation.Lock()
+        IDisposable IDeferredInvocation.LockInvocation()
         {
             _locksCount += 1;
-            // TODO Optimization: DisposableActions can use pools
-            return new DisposableAction(Unlock);
+            return new DisposableAction(UnlockInvocation);
         }
 
         public void Cancel()
@@ -47,10 +46,10 @@ namespace UnityUtils.Invocation
 #if UU_DI_STACKTRACE
             UnityEngine.Debug.Log($"{_stackTraceOnCreation}");
 #endif
-            Unlock();
+            UnlockInvocation();
         }
 
-        private void Unlock()
+        private void UnlockInvocation()
         {
             _locksCount -= 1;
             TryInvoke();
