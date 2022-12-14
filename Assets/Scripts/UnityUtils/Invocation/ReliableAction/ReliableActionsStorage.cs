@@ -192,6 +192,7 @@ namespace UnityUtils.Invocation.ReliableAction
                 return typeGuid.Value;
             }
             
+            // TODO: Missing Code coverage
             throw new Exception($"Could not load action by type-guid:{guidSaveKey} at {nameof(saveSlot)}:{saveSlot}");
         }
 
