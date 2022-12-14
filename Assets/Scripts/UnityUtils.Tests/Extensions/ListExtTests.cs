@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -24,6 +25,15 @@ namespace Extensions
             var list = Enumerable.Repeat(1, 10).ToList();
             
             Assert.That(list.Reverse_NoHeapAlloc, Is.Not.AllocatingGCMemory());
+        }
+
+        [Test] public void Reverse_NoHeapAlloc_Method_OnNullList_Throws_ArgumentNullException()
+        {
+            List<int> list = null;
+
+            Action action = () => list.Reverse_NoHeapAlloc();
+
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Test] public void EnsureSize_IncreasesSize()
