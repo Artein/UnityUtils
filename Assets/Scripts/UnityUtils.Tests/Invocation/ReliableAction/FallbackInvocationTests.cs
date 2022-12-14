@@ -39,6 +39,31 @@ namespace Invocation.ReliableAction
                 testsModel.Count.Should().Be(1);
             }
         }
+
+        [Test] public void FallbackInvocation_DoesNotPerform_WhenNoParticularActionWasSaved()
+        {
+            { // First "app run"
+                var testsModel = new TestsModel();
+                var storage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, storage);
+                
+                var secondFallbackInvoker = new SecondTestsFallbackInvoker(storage, fallbackInstantiator);
+                var ___ = new EmptyReliableAction(storage, secondFallbackInvoker);
+                
+                GC.Collect(0);
+            }
+            
+            { // Consecutive "app run"
+                var testsModel = new TestsModel();
+                _cleanupStorage = new ReliableActionsStorage();
+                var fallbackInstantiator = new TestsReliableActionFallbackInstantiator(testsModel, _cleanupStorage);
+                var fallbackInvoker = new TestsFallbackInvoker(_cleanupStorage, fallbackInstantiator, false);
+
+                fallbackInvoker.Invoke();
+
+                testsModel.Count.Should().Be(0);
+            }
+        }
         
         [Test] public void FallbackInvocation_Performs_InScheduledOrder()
         {
