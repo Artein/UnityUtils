@@ -224,11 +224,17 @@ var assemblies = [
   {
     "name": "UnityUtils",
     "classes": [
-      { "name": "UnityUtils.Enumeration.RangeEnumerationExtensions", "rp": "UnityUtils_RangeEnumerationExtensions.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.DeferredInvocation", "rp": "UnityUtils_DeferredInvocation.html", "cl": 31, "ucl": 0, "cal": 31, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.DisposableAction", "rp": "UnityUtils_DisposableAction.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 59, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
-      { "name": "UnityUtils.Invocation.DisposableAction[TArgs]", "rp": "UnityUtils_DisposableAction_TArgs_.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 59, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Extensions.ListExt", "rp": "UnityUtils_ListExt.html", "cl": 28, "ucl": 6, "cal": 34, "tl": 55, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Extensions.PlayerPrefsExt", "rp": "UnityUtils_PlayerPrefsExt.html", "cl": 10, "ucl": 58, "cal": 68, "tl": 110, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Extensions.RangeEnumerationExt", "rp": "UnityUtils_RangeEnumerationExt.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Helpers.ClearPlayerPrefsMenuItem", "rp": "UnityUtils_ClearPlayerPrefsMenuItem.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 18, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.DeferredInvocation", "rp": "UnityUtils_DeferredInvocation.html", "cl": 31, "ucl": 0, "cal": 31, "tl": 67, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.DisposableAction", "rp": "UnityUtils_DisposableAction.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 60, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.DisposableAction[TArgs]", "rp": "UnityUtils_DisposableAction_TArgs_.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 60, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "UnityUtils.Invocation.OrderedEvent", "rp": "UnityUtils_OrderedEvent.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 81, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.ReliableAction.BaseFallbackInvoker", "rp": "UnityUtils_BaseFallbackInvoker.html", "cl": 22, "ucl": 5, "cal": 27, "tl": 48, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.ReliableAction.BaseReliableAction[T]", "rp": "UnityUtils_BaseReliableAction_T_.html", "cl": 43, "ucl": 4, "cal": 47, "tl": 89, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "UnityUtils.Invocation.ReliableAction.ReliableActionsStorage", "rp": "UnityUtils_ReliableActionsStorage.html", "cl": 157, "ucl": 3, "cal": 160, "tl": 235, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
