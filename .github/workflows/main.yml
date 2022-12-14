@@ -80,7 +80,7 @@ jobs:
           testMode: all
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Test Results
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+UnityUtils'
+          coverageOptions: 'generateHtmlReport;generateHtmlReportHistory;generateBadgeReport;generateAdditionalMetrics;generateTestReferences;assemblyFilters:+UnityUtils'
 
       - name: Zip CodeCoverage results # Step 9
         run: zip -r CodeCoverage.zip ${{ steps.unity-test-runner.outputs.coveragePath }} -x ".git/*" ".github/*"
