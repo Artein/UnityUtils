@@ -6,8 +6,8 @@ namespace Invocation.ReliableAction.Helpers
 {
     internal class TestsFallbackInvoker : BaseFallbackInvoker
     {
-        public TestsFallbackInvoker(IReliableActionsStorage storage, IReliableActionFallbackInstantiator instantiator, bool logExceptionsDuringInvocation = true) 
-            : base(storage, instantiator, logExceptionsDuringInvocation)
+        public TestsFallbackInvoker(IReliableActionsStorage storage, IReliableActionFallbackInstantiator instantiator) 
+            : base(storage, instantiator)
         {
         }
 

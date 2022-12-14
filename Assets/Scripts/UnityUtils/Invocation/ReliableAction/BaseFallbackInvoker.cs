@@ -8,14 +8,12 @@ namespace UnityUtils.Invocation.ReliableAction
     {
         private readonly IReliableActionsStorage _storage;
         private readonly IReliableActionFallbackInstantiator _instantiator;
-        private readonly bool _logExceptionsDuringInvocation;
 
         protected abstract Dictionary<Guid, Type> SupportedActionTypesDic { get; }
         public IReadOnlyDictionary<Guid, Type> SupportedActionTypes => SupportedActionTypesDic;
 
-        protected BaseFallbackInvoker(IReliableActionsStorage storage, IReliableActionFallbackInstantiator instantiator, bool logExceptionsDuringInvocation = true)
+        protected BaseFallbackInvoker(IReliableActionsStorage storage, IReliableActionFallbackInstantiator instantiator)
         {
-            _logExceptionsDuringInvocation = logExceptionsDuringInvocation;
             _instantiator = instantiator;
             _storage = storage;
         }
@@ -35,10 +33,7 @@ namespace UnityUtils.Invocation.ReliableAction
                 }
                 catch (Exception exception) // hide and just log exception
                 {
-                    if (_logExceptionsDuringInvocation)
-                    {
-                        UnityEngine.Debug.LogException(exception);
-                    }
+                    UnityEngine.Debug.LogException(exception);
                 }
             }
         }
