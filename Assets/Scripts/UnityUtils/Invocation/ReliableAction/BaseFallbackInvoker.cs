@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace UnityUtils.Invocation.ReliableAction
 {
@@ -22,10 +23,7 @@ namespace UnityUtils.Invocation.ReliableAction
         protected void Invoke()
         {
             var actions = _storage.CreateAndTake(this, _instantiator);
-            if (actions == null)
-            {
-                return;
-            }
+            Assert.IsNotNull(actions);
             
             for (int i = 0; i < actions.Count; i += 1)
             {

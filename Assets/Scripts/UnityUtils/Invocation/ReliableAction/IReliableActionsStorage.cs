@@ -11,7 +11,7 @@ namespace UnityUtils.Invocation.ReliableAction
         void Clear();
         
         // List contains actions in backward order
-        [MustUseReturnValue, CanBeNull]
+        [MustUseReturnValue]
         IList<IReliableAction> CreateAndTake([NotNull] IFallbackInvoker invoker, IReliableActionFallbackInstantiator instantiator);
     }
 }
