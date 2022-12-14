@@ -34,9 +34,9 @@ namespace Extensions.PlayerPrefsExtensions
         {
             PlayerPrefsExt.SetBool(TestsSaveKey, true);
             
-            var receivedBool = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
+            var success = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
 
-            receivedBool.Should().Be(true);
+            success.Should().Be(true);
         }
         
         [Test] public void TryGetBool_SetOutArgument_Value_WhenSuccessfullyLoadedFromSave()
@@ -51,9 +51,9 @@ namespace Extensions.PlayerPrefsExtensions
         
         [Test] public void TryGetBool_ReturnsFalse_WhenNoKeyWasSaved()
         {
-            var receivedBool = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
+            var success = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
 
-            receivedBool.Should().Be(false);
+            success.Should().Be(false);
         }
 
         [Test] public void TryGetBool_SetOutArgument_Value_ToNull_WhenNoKeyWasSaved()
@@ -67,9 +67,9 @@ namespace Extensions.PlayerPrefsExtensions
         {
             PlayerPrefs.SetInt(TestsSaveKey, 1); // TryGetBool works on Strings
             
-            var receivedBool = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
+            var success = PlayerPrefsExt.TryGetBool(TestsSaveKey, out _);
             
-            receivedBool.Should().Be(false);
+            success.Should().Be(false);
             LogAssert.Expect(LogType.Error, $"{nameof(PlayerPrefsExt.TryGetBool)}: Could not parse loaded string ()");
         }
         
