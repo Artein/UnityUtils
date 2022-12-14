@@ -1,0 +1,16 @@
+{
+  "name": "elapotp.unityutils",
+  "author":
+  {
+    "name": "Artem Sukhliak",
+    "url" : "https://github.com/Artein"
+  },
+  "displayName": "Unity Utils",
+  "unity": "2021.3",
+  "version": "0.1.0",
+  "description": "Utilitarian scripts for Unity-based projects",
+  "keywords": [ "version" ],
+  "license": "MIT",
+  "category": "Utilities",
+  "dependencies": {}
+}
