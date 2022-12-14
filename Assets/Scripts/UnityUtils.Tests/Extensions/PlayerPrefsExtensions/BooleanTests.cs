@@ -46,7 +46,7 @@ namespace Extensions.PlayerPrefsExtensions
             
             PlayerPrefsExt.TryGetBool(TestsSaveKey, out var outValue);
             
-            outValue.HasValue.Should().Be(saveValue);
+            outValue!.Value.Should().Be(saveValue);
         }
         
         [Test] public void TryGetBool_ReturnsFalse_WhenNoKeyWasSaved()
