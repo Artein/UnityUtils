@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Invocation.ReliableAction.Helpers;
 using NUnit.Framework;
-using UnityUtils;
 using UnityUtils.Invocation.ReliableAction;
 
 namespace Invocation.ReliableAction
