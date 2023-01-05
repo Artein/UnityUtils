@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageReport scope="Summary">
   <Summary>
-    <Generatedon>12/15/2022 - 21:08:42</Generatedon>
+    <Generatedon>01/05/2023 - 15:00:27</Generatedon>
     <Parser>OpenCoverParser</Parser>
     <Assemblies>1</Assemblies>
-    <Classes>11</Classes>
-    <Files>10</Files>
-    <Coveredlines>429</Coveredlines>
+    <Classes>10</Classes>
+    <Files>9</Files>
+    <Coveredlines>426</Coveredlines>
     <Uncoveredlines>1</Uncoveredlines>
-    <Coverablelines>430</Coverablelines>
-    <Totallines>796</Totallines>
+    <Coverablelines>427</Coverablelines>
+    <Totallines>783</Totallines>
     <Linecoverage>99.7</Linecoverage>
     <Coveredbranches>0</Coveredbranches>
     <Totalbranches>0</Totalbranches>
   </Summary>
   <Coverage>
-    <Assembly name="UnityUtils" classes="11" coverage="99.7" coveredlines="429" coverablelines="430" totallines="856" branchcoverage="" coveredbranches="0" totalbranches="0">
-      <Class name="UnityUtils.Assertion" coverage="100" coveredlines="3" coverablelines="3" totallines="13" branchcoverage="" coveredbranches="0" totalbranches="0" />
+    <Assembly name="UnityUtils" classes="10" coverage="99.7" coveredlines="426" coverablelines="427" totallines="843" branchcoverage="" coveredbranches="0" totalbranches="0">
       <Class name="UnityUtils.Extensions.ListExt" coverage="100" coveredlines="34" coverablelines="34" totallines="55" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Extensions.PlayerPrefsExt" coverage="100" coveredlines="68" coverablelines="68" totallines="110" branchcoverage="" coveredbranches="0" totalbranches="0" />
       <Class name="UnityUtils.Extensions.RangeEnumerationExt" coverage="100" coveredlines="19" coverablelines="19" totallines="44" branchcoverage="" coveredbranches="0" totalbranches="0" />
