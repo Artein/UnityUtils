@@ -14,17 +14,25 @@ namespace UnityUtils.Invocation
     public class DisposableAction : IDisposableAction
     {
         private readonly Action _action;
-        private readonly Action _resetAction;
+        private readonly bool _actionInvocationOnce;
         public bool IsInvoked { get; private set; }
 
-        public DisposableAction([NotNull] Action action)
+        private bool CanBeInvoked => !_actionInvocationOnce || !IsInvoked;
+
+        public DisposableAction([NotNull] Action action, bool actionInvocationOnce = true)
         {
             _action = action;
+            _actionInvocationOnce = actionInvocationOnce;
+        }
+
+        public void Reset()
+        {
+            IsInvoked = false;
         }
     
         public void Dispose()
         {
-            if (!IsInvoked)
+            if (CanBeInvoked)
             {
                 IsInvoked = true;
                 _action.Invoke();
@@ -40,17 +48,27 @@ namespace UnityUtils.Invocation
     {
         private readonly Action<TArgs> _action;
         private readonly TArgs _args;
+        private readonly bool _actionInvocationOnce;
+        
+        private bool CanBeInvoked => !_actionInvocationOnce || !IsInvoked;
+        
         public bool IsInvoked { get; private set; }
             
-        public DisposableAction([NotNull] Action<TArgs> action, TArgs args)
+        public DisposableAction([NotNull] Action<TArgs> action, TArgs args, bool actionInvocationOnce = true)
         {
             _action = action;
             _args = args;
+            _actionInvocationOnce = actionInvocationOnce;
+        }
+
+        public void Reset()
+        {
+            IsInvoked = false;
         }
         
         public void Dispose()
         {
-            if (!IsInvoked)
+            if (CanBeInvoked)
             {
                 IsInvoked = true;
                 _action.Invoke(_args);
