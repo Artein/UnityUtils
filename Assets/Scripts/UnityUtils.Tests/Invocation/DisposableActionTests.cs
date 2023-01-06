@@ -27,7 +27,33 @@ namespace Invocation
 
             callCount.Should().Be(0);
         }
+
+        [Test] public void CanBeReused_AfterReset()
+        {
+            int callCount = 0;
+            void MyAction() => callCount++;
+            
+            var disposableAction = new DisposableAction(MyAction);
+            disposableAction.Dispose();
+            disposableAction.Reset();
+            disposableAction.Dispose();
+            
+            callCount.Should().Be(2);
+        }
         
+        [Test] public void CanBeFired_MultipleTimes()
+        {
+            int callCount = 0;
+            void MyAction() => callCount++;
+            
+            IDisposable disposableAction = new DisposableAction(MyAction, false);
+            disposableAction.Dispose();
+            disposableAction.Dispose();
+            disposableAction.Dispose();
+            
+            callCount.Should().Be(3);
+        }
+
         [Test] public void WithArguments_Fires_AfterHandleReleased()
         {
             int callCount = 0;
@@ -38,7 +64,7 @@ namespace Invocation
 
             callCount.Should().Be(1);
         }
-        
+
         [Test] public void WithArguments_DontFires_WhenHandleWasNotReleased()
         {
             int callCount = 0;
@@ -61,6 +87,32 @@ namespace Invocation
             receivedArgs.Int.Should().Be(passedArgs.Int);
             receivedArgs.Float.Should().Be(passedArgs.Float);
             receivedArgs.String.Should().Be(passedArgs.String);
+        }
+        
+        [Test] public void WithArguments_CanBeReused_AfterReset()
+        {
+            int callCount = 0;
+            void MyAction(Args _) => callCount++;
+
+            var disposableAction = new DisposableAction<Args>(MyAction, new Args());
+            disposableAction.Dispose();
+            disposableAction.Reset();
+            disposableAction.Dispose();
+            
+            callCount.Should().Be(2);
+        }
+        
+        [Test] public void WithArguments_CanBeFired_MultipleTimes()
+        {
+            int callCount = 0;
+            void MyAction(Args _) => callCount++;
+
+            IDisposable disposableAction = new DisposableAction<Args>(MyAction, new Args(), false);
+            disposableAction.Dispose();
+            disposableAction.Dispose();
+            disposableAction.Dispose();
+            
+            callCount.Should().Be(3);
         }
 
         private struct Args
